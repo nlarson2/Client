@@ -3,41 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using SmashDomeNetwork;
 
-
 public class Player : MonoBehaviour
 {
 
     NetworkManager networkManager = NetworkManager.Instance;
 
-    public float speed = 100.0f;
+    public float speed = 10.0f;
 
     public Vector3 position;
     public Vector3 lHandPos;
     public Vector3 rHandPos;
-    public Quaternion rotate;
+    public Quaternion rotation;
     public Quaternion lHandRot;
     public Quaternion rHandRot;
+    public Quaternion cameratRotation;
 
     public GameObject lHand;
     public GameObject rHand;
+    public GameObject body;
 
 
 
     // Update is called once per frame
     void Update()
     {
-        /*body*/
+
         if (position != transform.position)
         {
+            //if the destination gets more than 10 away from the player, it snaps them to the correct postions
             if (Vector3.Distance(position, transform.position) > 10.0f)
                 transform.position = position;
             else
                 transform.position = Vector3.MoveTowards(transform.position, position, Time.deltaTime * speed);
         }
-        if (rotate != transform.rotation)
+        if (rotation != transform.rotation)
         {
-            //transform.eulerAngles = rotate.eulerAngles;
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotate, 0.5f);
+            //meant to gradually rotate player
+            transform.eulerAngles = rotation.eulerAngles;
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 0.1f);
+        }
+        if (cameratRotation != body.transform.rotation)
+        {
+            body.transform.eulerAngles = cameratRotation.eulerAngles;
+            body.transform.rotation = Quaternion.Slerp(body.transform.rotation, cameratRotation, 0.1f);
         }
 
         if (lHand != null)

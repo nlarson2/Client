@@ -51,10 +51,11 @@ public class Client
         }
     }
 
+    //function that can be used to send messages to the server
     public void SendMsg(string msg)
     {
         byte[] send = System.Text.ASCIIEncoding.ASCII.GetBytes(msg);
-        Debug.Log(msg);
+        //Debug.Log(msg);
         try
         {
             stream.Write(send, 0, send.Length);
@@ -77,6 +78,8 @@ public class Client
         {
             while (true)
             {
+                //used to determine level of json msg
+                //Some json msgs will have multiple sets of brackets
                 int brackets = 0;
                 json = string.Empty;
                 while (true)

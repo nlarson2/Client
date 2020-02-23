@@ -64,9 +64,10 @@ namespace SmashDomeNetwork
     }
     public class MoveMsg : Message
     {
-        public float x, y, z;
-        public float xr, yr, zr, wr;
-        
+        public Vector3 pos;
+        public Quaternion playerRotation;
+        public Quaternion camerRotation;
+
         public MoveMsg(int from)
         {
             this.msgType = 3;
@@ -93,10 +94,13 @@ namespace SmashDomeNetwork
             this.from = from;
         }
 
- 
+
     }
     public class SnapshotMsg : Message
     {
+        public List<int> userId = new List<int>();
+        public List<Vector3> positions = new List<Vector3>();
+        public List<Quaternion> rotation = new List<Quaternion>();
         public SnapshotMsg()
         {
             this.msgType = 6;
@@ -109,7 +113,7 @@ namespace SmashDomeNetwork
         {
             this.msgType = 7;
         }
-        
+
     }
 
     public class AddPlayer : Message
@@ -121,5 +125,60 @@ namespace SmashDomeNetwork
             this.playerType = playerType;
         }
     }
+
+
+
+    public class TestMsg : Message
+    {
+        public int[] stuff = new int[50];
+
+        public TestMsg() { }
+
+        public void Setup()
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                stuff[i] = i;
+            }
+        }
+        public void print()
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                Debug.Log(stuff[i]);
+            }
+        }
+    }
+
+    public class BigTest : Message
+    {
+        //public List<Vector3> msgs = new List<Vector3>();
+        public List<int> userId = new List<int>();
+        public List<Vector3> positions = new List<Vector3>();
+        public List<Quaternion> rotation = new List<Quaternion>();
+        public BigTest() { }
+
+        public void Setup()
+        {
+            userId.Add(5);
+            positions.Add(new Vector3(1, 1, 1));
+            rotation.Add(Quaternion.identity);
+
+            userId.Add(3);
+            positions.Add(new Vector3(3, 3, 3));
+            rotation.Add(Quaternion.identity);
+
+        }
+        public void print()
+        {
+            for (int i = 0; i < userId.Count; i++)
+            {
+                Debug.Log(userId[i]);
+            }
+        }
+
+
+    }
+
 
 }

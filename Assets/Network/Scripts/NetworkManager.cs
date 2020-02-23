@@ -125,8 +125,8 @@ namespace SmashDomeNetwork
             
             Message msg;
             msg = JsonUtility.FromJson<Message>(json);
-            Debug.Log(json);
-            //translate the messages
+            //Debug.Log(json);
+            //translate the messages type and call appropriate fucntion
             switch ((MsgType)msg.msgType)
             {
                 case MsgType.LOGIN:
@@ -161,16 +161,16 @@ namespace SmashDomeNetwork
         {
             MoveMsg msg = JsonUtility.FromJson<MoveMsg>(json);
             Player player = players.ElementAt(msg.from).Value.obj.GetComponent<Player>();
-            player.position = new Vector3(msg.x, msg.y, msg.z);
-            player.rotate = new Quaternion(msg.xr, msg.yr, msg.zr, 0);
-            
+            player.position = msg.pos;
+            player.rotation = msg.playerRotation;
+            player.cameratRotation = msg.camerRotation;
         }
 
         public void AddPlayer(Message msg)
         {
             PlayerData player = new PlayerData();
             player.id = msg.from;
-            //player.type = msg.msgType;sf  
+            //player.type = msg.msgType;
             addPlayerQ.Enqueue(player);
         }
 

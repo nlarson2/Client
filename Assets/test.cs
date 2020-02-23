@@ -15,7 +15,7 @@ public class test : MonoBehaviour
     {
         firstRun = true;
         testMove = new MoveMsg(1);
-        testMove.x = 1; testMove.y = 2; testMove.z = 3;
+        //testMove.x = 1; testMove.y = 2; testMove.z = 3;
         testString = JsonUtility.ToJson(testMove);
         testMsg = JsonUtility.FromJson<MoveMsg>(testString);
 
@@ -28,11 +28,11 @@ public class test : MonoBehaviour
         {
             if ((MsgType)testMsg.msgType == MsgType.MOVE)
             {
-                MoveMsg msg = JsonUtility.FromJson<MoveMsg>(testString);
+                /*MoveMsg msg = JsonUtility.FromJson<MoveMsg>(testString);
                 Debug.Log(msg);
                 Debug.Log(msg.x);
                 Debug.Log(msg.y);
-                Debug.Log(msg.z);
+                Debug.Log(msg.z);*/
             }
             firstRun = false;
         }
