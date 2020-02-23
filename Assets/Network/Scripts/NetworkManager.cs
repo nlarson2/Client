@@ -22,7 +22,7 @@ namespace SmashDomeNetwork
             public Player playerControl;
         };
 
-        private int id;
+        public int id = 0;
         public int playerType = 1;
 
         Client client;
@@ -60,6 +60,7 @@ namespace SmashDomeNetwork
                     {
                         instance = value;
                         instance.client = new Client();
+                        instance.client.Connect();
                     }
                 }
 
@@ -153,7 +154,7 @@ namespace SmashDomeNetwork
         { 
             Message outgoing = new LoginMsg(id);
             outgoing.from = id;
-            client.SendMsg(MsgToBytes(outgoing));
+            client.SendMsg(JsonUtility.ToJson(outgoing));
         }
 
         public void Move(string json)
@@ -169,7 +170,7 @@ namespace SmashDomeNetwork
         {
             PlayerData player = new PlayerData();
             player.id = msg.from;
-            player.type = msg.msgType;
+            //player.type = msg.msgType;sf  
             addPlayerQ.Enqueue(player);
         }
 
@@ -186,12 +187,18 @@ namespace SmashDomeNetwork
             return System.Text.Encoding.ASCII.GetBytes(s);
         }
 
+        public void SendMsg(Message msg)
+        {
+            string json = JsonUtility.ToJson(msg);
+            client.SendMsg(json);
+
+        }
 
         //send a close msg when the program terminates
         private void OnApplicationQuit()
         {
             LogoutMsg logOut = new LogoutMsg(this.id);
-            client.SendMsg(MsgToBytes(logOut));
+            client.SendMsg(JsonUtility.ToJson(logOut));
             client.Close();
         }
 

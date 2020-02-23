@@ -27,10 +27,8 @@ public class Client
     public void Connect()
     {
         cli = new TcpClient();
-        //cli.Connect("97.97.128.93", 55555);
-        cli.Connect("smashdome3d.hopto.org", 55555);
-        //cli.Connect("54.193.55.141", 55555);
-
+        cli.Connect("smashdome3d.hopto.org", 50000);
+        Debug.Log("HERE");
         if (cli.Connected)
         {
             try
@@ -52,8 +50,10 @@ public class Client
         }
     }
 
-    public void SendMsg(byte[] send)
+    public void SendMsg(string msg)
     {
+        byte[] send = System.Text.ASCIIEncoding.ASCII.GetBytes(msg);
+        Debug.Log(msg);
         try
         {
             stream.Write(send, 0, send.Length);
@@ -76,12 +76,17 @@ public class Client
         {
             while (true)
             {
+                int brackets = 0;
                 json = string.Empty;
                 while (true)
                 {
                     int inByte = stream.ReadByte();
                     json += (char)inByte;
+                    if (inByte == '{')
+                        brackets++;
                     if (inByte == '}')
+                        brackets--;
+                    if(brackets == 0)
                         break;
                 }
                 msgQueue.Enqueue(json);

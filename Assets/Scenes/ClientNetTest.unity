@@ -120,6 +120,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &214018523 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4681170343822111284, guid: d253f19149e0f0147a7ca680645b6435,
+    type: 3}
+  m_PrefabInstance: {fileID: 2081059892}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &278747526
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,7 +291,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 4e-45}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -609,7 +615,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1401818061
 Transform:
   m_ObjectHideFlags: 0
@@ -636,9 +642,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8032b79a2ae1334a9668c8b2857b867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
   playerType: 1
-  localPlayer: {fileID: 0}
-  playerPrefab: {fileID: 0}
+  localPlayer: {fileID: 214018523}
+  playerPrefab: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
+    type: 3}
   PCPlayer: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
     type: 3}
 --- !u!1 &1663309400
@@ -890,11 +898,6 @@ PrefabInstance:
     - target: {fileID: 5342786026626014077, guid: d253f19149e0f0147a7ca680645b6435,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6863168081739986889, guid: d253f19149e0f0147a7ca680645b6435,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
