@@ -65,7 +65,7 @@ namespace SmashDomeNetwork
     public class MoveMsg : Message
     {
         public float x, y, z;
-        public float xr, yr, zr;
+        public float xr, yr, zr, wr;
         
         public MoveMsg(int from)
         {

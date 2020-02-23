@@ -34,18 +34,29 @@ public class LocalPlayer : MonoBehaviour
             return;
         }
         time += Time.deltaTime;
-        if (time > 0.5)
+
+        if (time > 0.5 && (
+                PrevPosition != transform.position ||
+                PrevRotate.y != transform.rotation.y ||
+                PrevRotate.x != transform.rotation.x)
+            )
         {
-            MoveMsg movementMsg = new MoveMsg(1);
+            MoveMsg movementMsg = new MoveMsg(networkManager.id);
             Vector3 pos = transform.position;
             movementMsg.x = pos.x;
             movementMsg.y = pos.y;
             movementMsg.z = pos.z;
             movementMsg.xr = camera.rotation.x;
             movementMsg.yr = transform.rotation.y;
+            movementMsg.zr = transform.rotation.z;
+            movementMsg.wr = transform.rotation.w;
             
             networkManager.SendMsg(movementMsg);
             time = 0;
         }
+
+        PrevPosition = transform.position;
+        PrevRotate.x = camera.rotation.x;
+        PrevRotate.y = transform.rotation.y;
     }
 }

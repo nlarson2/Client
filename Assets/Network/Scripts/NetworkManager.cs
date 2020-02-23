@@ -131,7 +131,7 @@ namespace SmashDomeNetwork
             {
                 case MsgType.LOGIN:
                     Debug.Log("login");
-                    id = msg.to;
+                    id = msg.from;
                     Login(id);
                     break;
                 case MsgType.LOGOUT:
