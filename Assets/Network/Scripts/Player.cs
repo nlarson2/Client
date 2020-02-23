@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     public Quaternion rotation;
     public Quaternion lHandRot;
     public Quaternion rHandRot;
-    public Quaternion cameratRotation;
+    public Quaternion cameraRotation;
 
     public GameObject lHand;
     public GameObject rHand;
@@ -42,10 +42,10 @@ public class Player : MonoBehaviour
             transform.eulerAngles = rotation.eulerAngles;
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 0.1f);
         }
-        if (cameratRotation != body.transform.rotation)
+        if (cameraRotation != body.transform.rotation)
         {
-            body.transform.eulerAngles = cameratRotation.eulerAngles;
-            body.transform.rotation = Quaternion.Slerp(body.transform.rotation, cameratRotation, 0.1f);
+            body.transform.eulerAngles = cameraRotation.eulerAngles;
+            body.transform.rotation = Quaternion.Slerp(body.transform.rotation, cameraRotation, 0.1f);
         }
 
         if (lHand != null)

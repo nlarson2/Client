@@ -29,7 +29,7 @@ namespace SmashDomeNetwork
 
         public GameObject localPlayer;
         Dictionary<int, PlayerData> players = new Dictionary<int, PlayerData>();
-        Queue<PlayerData> addPlayerQ = new Queue<PlayerData>();
+        Queue<int> addPlayerQ = new Queue<int>();
         Queue<int> destroyQ = new Queue<int>();
 
         public GameObject playerPrefab;
@@ -80,14 +80,16 @@ namespace SmashDomeNetwork
         {
             while (addPlayerQ.Count > 0)
             {
-                PlayerData player = addPlayerQ.Dequeue();
-
+                int playerID = addPlayerQ.Dequeue();
+                PlayerData player = players[playerID];
                 if (player.id != this.id)
                 {
                     player.obj = Instantiate(PCPlayer, GetComponentInChildren<Transform>());
                     player.playerControl = player.obj.GetComponent<Player>();
                     player.obj.name = "NetworkPlayer:" + player.id;
-                    players.Add(player.id, player);
+                    players.Remove(playerID);
+                    players.Add(playerID, player);
+                    
                 }
                 else
                 {
@@ -99,7 +101,8 @@ namespace SmashDomeNetwork
             while (destroyQ.Count > 0)
             {
                 int destroyPlayer = destroyQ.Dequeue();
-                Destroy(this.players.ElementAt(destroyPlayer).Value.obj);
+                Debug.Log(destroyPlayer);
+                Destroy(this.players[destroyPlayer].obj);
                 players.Remove(destroyPlayer);
             }
 
@@ -146,6 +149,10 @@ namespace SmashDomeNetwork
                     Debug.Log("AddPlayer");
                     AddPlayer(msg);
                     break;
+                case MsgType.SNAPSHOT:
+                    ProcessSnapshot(json);
+                    Debug.Log("SnapShot");
+                    break;
 
             }
         }
@@ -159,19 +166,55 @@ namespace SmashDomeNetwork
 
         public void Move(string json)
         {
+            
             MoveMsg msg = JsonUtility.FromJson<MoveMsg>(json);
-            Player player = players.ElementAt(msg.from).Value.obj.GetComponent<Player>();
-            player.position = msg.pos;
-            player.rotation = msg.playerRotation;
-            player.cameratRotation = msg.camerRotation;
+            try
+            {
+                Debug.Log(json);
+                Player player = players[msg.from].playerControl;
+                player.position = msg.pos;
+                player.rotation = msg.playerRotation;
+                player.cameraRotation = msg.cameraRotation;
+            }
+            catch (Exception e)
+            {
+                return;
+            }
         }
 
         public void AddPlayer(Message msg)
         {
-            PlayerData player = new PlayerData();
-            player.id = msg.from;
-            //player.type = msg.msgType;
-            addPlayerQ.Enqueue(player);
+            if (msg.from != this.id)
+            {
+                PlayerData player = new PlayerData();
+                player.id = msg.from;
+                //player.type = msg.msgType;
+                addPlayerQ.Enqueue(player.id);
+                players.Add(player.id, player);
+            }
+        }
+
+        public void ProcessSnapshot(string json)
+        {
+            SnapshotMsg snapshot = JsonUtility.FromJson<SnapshotMsg>(json);
+            Debug.Log(snapshot.userId.Count);
+            for(int i = 0; i < snapshot.userId.Count; i++)
+            {
+                try
+                {
+                    if (snapshot.userId[i] == this.id) continue;
+
+                    int playerID = snapshot.userId[i];
+                    Player player = players[playerID].obj.GetComponent<Player>();
+                    player.position = snapshot.positions[i];
+                    player.rotation = snapshot.rotation[i];
+                    player.cameraRotation = snapshot.camRotation[i];
+                }
+                catch (Exception e)
+                {
+                    continue;
+                }
+            }
         }
 
         public void RemovePlayer(Message msg)

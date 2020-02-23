@@ -49,10 +49,10 @@ public class LocalPlayer : MonoBehaviour
                 PrevRotate.x != transform.rotation.x)
             )
         {
-            MoveMsg movementMsg = new MoveMsg(networkManager.id);;
+            MoveMsg movementMsg = new MoveMsg(networkManager.id);
             movementMsg.pos = transform.position;
             movementMsg.playerRotation = transform.rotation;
-            movementMsg.camerRotation = camera.transform.rotation;
+            movementMsg.cameraRotation = camera.transform.rotation;
             
             networkManager.SendMsg(movementMsg);
             time = 0;
