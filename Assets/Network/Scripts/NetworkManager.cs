@@ -31,9 +31,11 @@ namespace SmashDomeNetwork
         Dictionary<int, PlayerData> players = new Dictionary<int, PlayerData>();
         Queue<int> addPlayerQ = new Queue<int>();
         Queue<int> destroyQ = new Queue<int>();
+        Queue<StructureChangeMsg> addStructQ = new Queue<StructureChangeMsg>();
 
         public GameObject playerPrefab;
         public GameObject PCPlayer;
+        public GameObject StructurePrefab;
 
         float sendDelay = 0.03f;
         float curTime = 0;
@@ -106,6 +108,19 @@ namespace SmashDomeNetwork
                 players.Remove(destroyPlayer);
             }
 
+            while (addStructQ.Count > 0)
+            {
+                StructureChangeMsg structMsg = addStructQ.Dequeue();
+                GameObject obj = Instantiate(StructurePrefab, structMsg.pos, Quaternion.identity);
+                Mesh mesh = new Mesh();
+                obj.GetComponent<MeshFilter>().mesh = mesh;
+                mesh.Clear();
+                mesh.vertices = structMsg.vertices;
+                mesh.triangles = structMsg.triangles;
+                
+            }
+
+
         }
 
         public void ReceiveMessages()
@@ -152,6 +167,10 @@ namespace SmashDomeNetwork
                 case MsgType.SNAPSHOT:
                     ProcessSnapshot(json);
                     Debug.Log("SnapShot");
+                    break;
+                case MsgType.STRUCTURE:
+                    AddStructure(json);
+                    Debug.Log("Structure");
                     break;
 
             }
@@ -215,6 +234,12 @@ namespace SmashDomeNetwork
                     continue;
                 }
             }
+        }
+
+        public void AddStructure(string json)
+        {
+            StructureChangeMsg structMsg = JsonUtility.FromJson<StructureChangeMsg>(json);
+            addStructQ.Enqueue(structMsg);
         }
 
         public void RemovePlayer(Message msg)
