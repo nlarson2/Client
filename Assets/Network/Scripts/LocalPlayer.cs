@@ -43,7 +43,7 @@ public class LocalPlayer : MonoBehaviour
         time += Time.deltaTime;
 
         //only send message if a change has occured //idk if this actually works
-        if (time > 0.05 && (
+        if (time > 0.1 && (
                 PrevPosition != transform.position ||
                 PrevRotate.y != transform.rotation.y ||
                 PrevRotate.x != transform.rotation.x)

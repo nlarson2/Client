@@ -26,9 +26,19 @@ public class Client
 
     public void Connect()
     {
+        int count = 0;
         cli = new TcpClient();
-        cli.Connect("smashdome3d.hopto.org", 50000);
-        //cli.Connect("localhost", 50000);
+        try
+        {
+            cli.Connect("smashdome2.hopto.org", 44444);
+            //cli.Connect("localhost", 50000);
+        }
+        catch (Exception e)
+        {
+            Debug.Log("FAILED TO CONNECT");
+            Application.Quit(0);
+            count++;
+        }
         Debug.Log("HERE");
         if (cli.Connected)
         {
