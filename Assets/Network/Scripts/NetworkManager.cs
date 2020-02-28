@@ -32,10 +32,12 @@ namespace SmashDomeNetwork
         Queue<int> addPlayerQ = new Queue<int>();
         Queue<int> destroyQ = new Queue<int>();
         Queue<StructureChangeMsg> addStructQ = new Queue<StructureChangeMsg>();
+        Queue<ShootMsg> bulletQ = new Queue<ShootMsg>();
 
         public GameObject playerPrefab;
         public GameObject PCPlayer;
         public GameObject StructurePrefab;
+        public GameObject bulletPrefab;
 
         float sendDelay = 0.03f;
         float curTime = 0;
@@ -120,7 +122,16 @@ namespace SmashDomeNetwork
                 
             }
 
-
+            while(bulletQ.Count > 0)
+            {
+                ShootMsg shoot = bulletQ.Dequeue();
+                GameObject bull = Instantiate(bulletPrefab, shoot.position, transform.rotation);
+                Rigidbody rig = bull.GetComponent<Rigidbody>();
+                rig.useGravity = false;
+                //rig.AddForce(Physics.gravity * (rig.mass * rig.mass));
+                //rig.AddForce((transform.forward + transform.up / 4) * 2.0f);
+                rig.AddForce(shoot.direction);
+            }
         }
 
         public void ReceiveMessages()
@@ -159,6 +170,9 @@ namespace SmashDomeNetwork
                 case MsgType.MOVE:
                     Debug.Log("Move");
                     Move(json);
+                    break;
+                case MsgType.SHOOT:
+                    Shoot(json);
                     break;
                 case MsgType.ADDPLAYER:
                     Debug.Log("AddPlayer");
@@ -212,7 +226,12 @@ namespace SmashDomeNetwork
                 players.Add(player.id, player);
             }
         }
+        public void Shoot(string msg)
+        {
+            ShootMsg shoot = JsonUtility.FromJson<ShootMsg>(msg);
+            bulletQ.Enqueue(shoot);
 
+        }
         public void ProcessSnapshot(string json)
         {
             SnapshotMsg snapshot = JsonUtility.FromJson<SnapshotMsg>(json);

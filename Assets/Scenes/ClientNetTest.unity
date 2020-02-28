@@ -581,6 +581,8 @@ MonoBehaviour:
     type: 3}
   StructurePrefab: {fileID: 7368568842321067293, guid: 531473b8e4c0fbe41a350e0e245737d6,
     type: 3}
+  bulletPrefab: {fileID: 6940828250910360934, guid: 4c49c38fad551f843b63913640caa567,
+    type: 3}
 --- !u!1 &1538673784
 GameObject:
   m_ObjectHideFlags: 0
