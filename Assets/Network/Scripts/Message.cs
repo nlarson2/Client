@@ -9,6 +9,7 @@ namespace SmashDomeNetwork
 {
     public enum MsgType
     {
+        //each msg type has a sequence number associated with it
         LOGIN = 1,
         LOGOUT = 2,
         MOVE = 3,
@@ -20,25 +21,32 @@ namespace SmashDomeNetwork
     }
     public class Message
     {
+        private int sequenceNum = new int[9];
 
         protected DateTime time = DateTime.Now;
         public int from;
         public int to;
         public int msgType;
-        //protected byte[] msg; // used later when we move from json
+        protected byte[] msg; // used later when we move from json
         char delimiter = '\0';
+        public Vector3[] pos; 
+        public Quaternion[] rot, camrot;
 
-        public byte[] constructMsg()
+
+        public byte[] constructMsg(int msgType, int from, int to, Object data)
         {
+            Cerealize cc = new Cerealize();
+            if (!(cc.CerealizeMSG(msgType, sequenceNum[msgType], data)))
+                sequenceNum[msgType]++;
             return null;
         }
 
         public byte[] GetMessage()
         {
-            string json = JsonUtility.ToJson(this);
-            Debug.Log(json);
-
-            return System.Text.ASCIIEncoding.ASCII.GetBytes(json);
+            //string json = JsonUtility.ToJson(this);
+            //Debug.Log(json);
+            return cc.ReadMessage();
+            //return System.Text.ASCIIEncoding.ASCII.GetBytes(json);
         }
     }
 
@@ -88,8 +96,6 @@ namespace SmashDomeNetwork
 
     public class ShootMsg : Message
     {
-        public Vector3 position;
-        public Vector3 direction;
         public ShootMsg(int from)
         {
             this.msgType = 5;
@@ -122,13 +128,13 @@ namespace SmashDomeNetwork
 
     }
 
-    public class AddPlayer : Message
+    public class AddPlayerMsg : Message
     {
         public int playerType;
-        public AddPlayer(int playerType)
+        public AddPlayerMsg(int from)
         {
             this.msgType = 8;
-            this.playerType = playerType;
+            this.from = from;
         }
     }
 
@@ -142,7 +148,7 @@ namespace SmashDomeNetwork
 
         public void Setup()
         {
-            for (int i = 0; i < 50; i++)
+            for(int i = 0; i < 50; i++)
             {
                 stuff[i] = i;
             }
@@ -173,11 +179,11 @@ namespace SmashDomeNetwork
             userId.Add(3);
             positions.Add(new Vector3(3, 3, 3));
             rotation.Add(Quaternion.identity);
-
+            
         }
         public void print()
         {
-            for (int i = 0; i < userId.Count; i++)
+            for(int i = 0; i < userId.Count; i++)
             {
                 Debug.Log(userId[i]);
             }
