@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+//using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -9,7 +10,6 @@ namespace SmashDomeNetwork
 {
     public enum MsgType
     {
-        //each msg type has a sequence number associated with it
         LOGIN = 1,
         LOGOUT = 2,
         MOVE = 3,
@@ -21,7 +21,6 @@ namespace SmashDomeNetwork
     }
     public class Message
     {
-        private int sequenceNum = new int[9];
 
         protected DateTime time = DateTime.Now;
         public int from;
@@ -29,24 +28,30 @@ namespace SmashDomeNetwork
         public int msgType;
         protected byte[] msg; // used later when we move from json
         char delimiter = '\0';
-        public Vector3[] pos; 
-        public Quaternion[] rot, camrot;
 
-
-        public byte[] constructMsg(int msgType, int from, int to, Object data)
+        public byte[] constructMsg()
         {
-            Cerealize cc = new Cerealize();
-            if (!(cc.CerealizeMSG(msgType, sequenceNum[msgType], data)))
-                sequenceNum[msgType]++;
             return null;
+        }
+
+        public void writeMsg(String data)
+        {
+            msg = Encoding.ASCII.GetBytes(data);
+        }
+
+        public String byteToString(byte[] bytes)
+        {
+            String str = Encoding.ASCII.GetString(bytes);
+            return str;
         }
 
         public byte[] GetMessage()
         {
             //string json = JsonUtility.ToJson(this);
+            string json = this.ToString();
             //Debug.Log(json);
-            return cc.ReadMessage();
-            //return System.Text.ASCIIEncoding.ASCII.GetBytes(json);
+
+            return System.Text.ASCIIEncoding.ASCII.GetBytes(json);
         }
     }
 
@@ -70,6 +75,7 @@ namespace SmashDomeNetwork
         }
 
     }
+    
     public class MoveMsg : Message
     {
         public Vector3 pos;
@@ -81,7 +87,6 @@ namespace SmashDomeNetwork
             this.msgType = 3;
             this.from = from;
         }
-
     }
 
     public class MoveVRMsg : Message
@@ -96,6 +101,8 @@ namespace SmashDomeNetwork
 
     public class ShootMsg : Message
     {
+        public Vector3 position;
+        public Vector3 direction;
         public ShootMsg(int from)
         {
             this.msgType = 5;
@@ -104,6 +111,7 @@ namespace SmashDomeNetwork
 
 
     }
+    
     public class SnapshotMsg : Message
     {
         public List<int> userId = new List<int>();
@@ -114,8 +122,8 @@ namespace SmashDomeNetwork
         {
             this.msgType = 6;
         }
-
     }
+
     public class StructureChangeMsg : Message
     {
         public Vector3 pos;
@@ -128,13 +136,13 @@ namespace SmashDomeNetwork
 
     }
 
-    public class AddPlayerMsg : Message
+    public class AddPlayer : Message
     {
         public int playerType;
-        public AddPlayerMsg(int from)
+        public AddPlayer(int playerType)
         {
             this.msgType = 8;
-            this.from = from;
+            this.playerType = playerType;
         }
     }
 
@@ -148,20 +156,21 @@ namespace SmashDomeNetwork
 
         public void Setup()
         {
-            for(int i = 0; i < 50; i++)
+            for (int i = 0; i < 50; i++)
             {
                 stuff[i] = i;
             }
         }
         public void print()
         {
-            for (int i = 0; i < 50; i++)
-            {
-                Debug.Log(stuff[i]);
-            }
+            //for (int i = 0; i < 50; i++)
+            //{
+                //Debug.Log(stuff[i]);
+                Console.WriteLine(stuff);
+            //}
         }
     }
-
+   
     public class BigTest : Message
     {
         //public List<Vector3> msgs = new List<Vector3>();
@@ -179,17 +188,15 @@ namespace SmashDomeNetwork
             userId.Add(3);
             positions.Add(new Vector3(3, 3, 3));
             rotation.Add(Quaternion.identity);
-            
+
         }
         public void print()
         {
-            for(int i = 0; i < userId.Count; i++)
+            for (int i = 0; i < userId.Count; i++)
             {
-                Debug.Log(userId[i]);
+                //Debug.Log(userId[i]);
             }
         }
-
-
     }
 
 
