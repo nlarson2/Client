@@ -42,9 +42,11 @@ namespace SmashDomeNetwork
         float sendDelay = 0.03f;
         float curTime = 0;
 
+
         Thread msgThread;
 
         public Cerealize cc = new Cerealize();
+
 
         //Set up to make NetworkManger a singleton
         private NetworkManager() { }
@@ -136,11 +138,10 @@ namespace SmashDomeNetwork
 
         public void ReceiveMessages()
         {
-            //string newMsg;
             byte[] newMsg;
             while (true)
             {
-                //newMsg = string.Empty;
+                
                 while (client.msgQueue.Count > 0)
                 {
                     newMsg = client.msgQueue.Dequeue();
@@ -150,47 +151,49 @@ namespace SmashDomeNetwork
             }
         }
 
-        //public void TranslateMsg(string msg)
         public void TranslateMsg(byte[] MSG)
         {
 
-            Message msg;
-
-            //msg = JsonUtility.FromJson<Message>(json);
-            byte[] json = MSG; //to clear Unity errors
-
-            msg = cc.DeserializeMSG(MSG);
-
-            //Debug.Log(json);
+            /* Message msg;
+             msg = cc.DeserializeMSG(MSG);*/
+            int type = cc.ByteInt32(MSG[4]);
+            
             //translate the messages type and call appropriate fucntion
-            switch ((MsgType)msg.msgType)
+            switch ((MsgType)type)
             {
                 case MsgType.LOGIN:
+                    LoginMsg msg = cc.DeserializeLiMSG(MSG);
                     Debug.Log("login");
                     id = msg.from;
                     Login(id);
                     break;
                 case MsgType.LOGOUT:
+                    LogoutMsg lmsg = cc.DeserializeLoMSG(MSG);
                     Debug.Log("RemovePlayer");
-                    RemovePlayer(msg);
+                    RemovePlayer(lmsg);
                     break;
                 case MsgType.MOVE:
+                    MoveMsg mmsg = cc.DeserializeMMSG(MSG);
                     Debug.Log("Move");
-                    Move(json);
+                    Move(MSG);
                     break;
                 case MsgType.SHOOT:
-                    Shoot(json); //?
+                    ShootMsg smsg = cc.DeserializeSMSG(MSG);
+                    Shoot(MSG);
                     break;
                 case MsgType.ADDPLAYER:
+                    AddPlayer amsg = cc.DeserializeAPMSG(MSG);
                     Debug.Log("AddPlayer");
-                    AddPlayer(msg);
+                    AddPlayer(amsg);
                     break;
                 case MsgType.SNAPSHOT:
-                    ProcessSnapshot(json); //?
+                    SnapshotMsg ssmsg = cc.DeserializeSsMSG(MSG);
+                    ProcessSnapshot(MSG);
                     Debug.Log("SnapShot");
                     break;
                 case MsgType.STRUCTURE:
-                    AddStructure(json); //?
+                    StructureChangeMsg tmsg = cc.DeserializeSCMSG(MSG);
+                    AddStructure(MSG);
                     Debug.Log("Structure");
                     break;
 
@@ -199,18 +202,15 @@ namespace SmashDomeNetwork
 
         public void Login(int id)
         { 
-            Message outgoing = new LoginMsg(id);
+            LoginMsg outgoing = new LoginMsg(id);
             outgoing.from = id;
             client.SendMsg(cc.SerializeMSG(outgoing));
         }
 
-
-        public void Move(byte[] json)
+        public void Move(byte[] MSG)
         {
-
-            //MoveMsg msg = JsonUtility.FromJson<MoveMsg>(json);
-            MoveMsg msg = cc.DeserializeMMSG(json);
-
+            
+            MoveMsg msg = cc.DeserializeMMSG(MSG);
             try
             {
                 //Debug.Log(json);
@@ -236,18 +236,15 @@ namespace SmashDomeNetwork
                 players.Add(player.id, player);
             }
         }
-        public void Shoot(byte[] msg)
+        public void Shoot(byte[] MSG)
         {
-            //ShootMsg shoot = JsonUtility.FromJson<ShootMsg>(msg);
-            ShootMsg shoot = cc.DeserializeSMSG(msg);
-
+            ShootMsg shoot = cc.DeserializeSMSG(MSG);
             bulletQ.Enqueue(shoot);
 
         }
-        public void ProcessSnapshot(byte[] msg)
+        public void ProcessSnapshot(byte[] MSG)
         {
-            // SnapshotMsg snapshot = JsonUtility.FromJson<SnapshotMsg>(json);
-            SnapshotMsg snapshot = cc.DeserializeSsMSG(msg);
+            SnapshotMsg snapshot = cc.DeserializeSsMSG(MSG);
             Debug.Log(snapshot.userId.Count);
             for(int i = 0; i < snapshot.userId.Count; i++)
             {
@@ -268,11 +265,9 @@ namespace SmashDomeNetwork
             }
         }
 
-        public void AddStructure(byte[] json)
+        public void AddStructure(byte[] MSG)
         {
-            //StructureChangeMsg structMsg = JsonUtility.FromJson<StructureChangeMsg>(json);
-            StructureChangeMsg structMsg = cc.DeserializeSCMSG(json);
-
+            StructureChangeMsg structMsg = cc.DeserializeSCMSG(MSG);
             addStructQ.Enqueue(structMsg);
         }
 
@@ -285,15 +280,14 @@ namespace SmashDomeNetwork
         //convert message to string
         private byte[] MsgToBytes(Message obj)
         {
-            //string s = JsonUtility.ToJson(obj);
-            return cc.SerializeMSG(obj);
+            byte[] s = cc.SerializeMSG(obj);
+            return s;
         }
 
         public void SendMsg(Message msg)
         {
-            //string json = JsonUtility.ToJson(msg);
-            byte[] json = cc.SerializeMSG(msg);
-            client.SendMsg(json);
+            byte[] MSG = cc.SerializeMSG(msg);
+            client.SendMsg(MSG);
 
         }
 
@@ -301,9 +295,7 @@ namespace SmashDomeNetwork
         private void OnApplicationQuit()
         {
             LogoutMsg logOut = new LogoutMsg(this.id);
-            //client.SendMsg(JsonUtility.ToJson(logOut));
             client.SendMsg(cc.SerializeMSG(logOut));
-
             client.Close();
         }
 

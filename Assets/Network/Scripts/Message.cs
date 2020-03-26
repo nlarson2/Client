@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-//using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -26,7 +25,7 @@ namespace SmashDomeNetwork
         public int from;
         public int to;
         public int msgType;
-        protected byte[] msg; // used later when we move from json
+        //protected byte[] msg; // used later when we move from json
         char delimiter = '\0';
 
         public byte[] constructMsg()
@@ -34,22 +33,10 @@ namespace SmashDomeNetwork
             return null;
         }
 
-        public void writeMsg(String data)
-        {
-            msg = Encoding.ASCII.GetBytes(data);
-        }
-
-        public String byteToString(byte[] bytes)
-        {
-            String str = Encoding.ASCII.GetString(bytes);
-            return str;
-        }
-
         public byte[] GetMessage()
         {
-            //string json = JsonUtility.ToJson(this);
-            string json = this.ToString();
-            //Debug.Log(json);
+            string json = JsonUtility.ToJson(this);
+            Debug.Log(json);
 
             return System.Text.ASCIIEncoding.ASCII.GetBytes(json);
         }
@@ -75,7 +62,6 @@ namespace SmashDomeNetwork
         }
 
     }
-    
     public class MoveMsg : Message
     {
         public Vector3 pos;
@@ -87,6 +73,7 @@ namespace SmashDomeNetwork
             this.msgType = 3;
             this.from = from;
         }
+
     }
 
     public class MoveVRMsg : Message
@@ -111,7 +98,6 @@ namespace SmashDomeNetwork
 
 
     }
-    
     public class SnapshotMsg : Message
     {
         public List<int> userId = new List<int>();
@@ -122,8 +108,8 @@ namespace SmashDomeNetwork
         {
             this.msgType = 6;
         }
-    }
 
+    }
     public class StructureChangeMsg : Message
     {
         public Vector3 pos;
@@ -163,14 +149,13 @@ namespace SmashDomeNetwork
         }
         public void print()
         {
-            //for (int i = 0; i < 50; i++)
-            //{
-                //Debug.Log(stuff[i]);
-                Console.WriteLine(stuff);
-            //}
+            for (int i = 0; i < 50; i++)
+            {
+                Debug.Log(stuff[i]);
+            }
         }
     }
-   
+
     public class BigTest : Message
     {
         //public List<Vector3> msgs = new List<Vector3>();
@@ -194,9 +179,11 @@ namespace SmashDomeNetwork
         {
             for (int i = 0; i < userId.Count; i++)
             {
-                //Debug.Log(userId[i]);
+                Debug.Log(userId[i]);
             }
         }
+
+
     }
 
 

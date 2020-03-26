@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
 
+
 namespace SmashDomeNetwork
 {
     public class Client
@@ -18,13 +19,11 @@ namespace SmashDomeNetwork
         public Cerealize cc = new Cerealize();
 
         //queue to store messages in order
-        //public Queue<string> msgQueue;
         public Queue<byte[]> msgQueue;
 
 
         public Client()
         {
-            //msgQueue = new Queue<string>();
             msgQueue = new Queue<byte[]>();
         }
 
@@ -34,7 +33,7 @@ namespace SmashDomeNetwork
             cli = new TcpClient();
             try
             {
-                cli.Connect("107.77.227.10", 44444);
+                cli.Connect("47.6.148.20", 44444);
                 //cli.Connect("localhost", 50000);
             }
             catch (Exception e)
@@ -66,16 +65,12 @@ namespace SmashDomeNetwork
         }
 
         //function that can be used to send messages to the server
-        //public void SendMsg(string msg)
         public void SendMsg(byte[] msg)
-
         {
-            //byte[] send = System.Text.ASCIIEncoding.ASCII.GetBytes(msg);
-            byte[] send = msg;
             //Debug.Log(msg);
             try
             {
-                stream.Write(send, 0, send.Length);
+                stream.Write(msg, 0, msg.Length);
                 Console.WriteLine("MESSAGE SENT");
 
             }
@@ -88,66 +83,59 @@ namespace SmashDomeNetwork
         public void RecvMsg()
         {
             byte[] buffer;//hold the bytes
-            //int byteC;//byte count
+                //int byteC;//byte count
             int buffSize = cli.ReceiveBufferSize;//how many bytes can be held
-            //String message;
+                                                 //String message;
+            //NetworkStream stream = cli.stream;
             byte[] message;
+            Boolean hasMSG = false;
             try
             {
                 while (true)
                 {
                     //used to determine level of json msg
-                    //Some json msgs will have multiple sets of brackets
-                    int brackets = 0;
-                    //message = string.Empty;
-                    while (true)
-                    {
-                        //buffer for msg size (first 8 bytes)
-                        buffer = new byte[8];
-                        //reads first 8 bytes
-                        for (int i = 0; i < 8; i++)
-                        {
-                            buffer[i] = (byte)(char)stream.ReadByte();
-                        }
-                        //saves 8 bytes into Int64/long
-                        Int64 msgSize = cc.ByteInt64(buffer);
-                        //creates buffer with msg size minus 8 bytes which we add later
-                        buffer = new byte[msgSize-8];
+                        //Some json msgs will have multiple sets of brackets
                         
-                        //this adds the first 8 bytes into the buffer at the beginning
-                        buffer = Cerealize.Combine(cc.IntByte(msgSize), buffer);
-                        
-                        //this reads the rest of the message into new buffer
-                        for (int j = 8; j < msgSize; j++)
+                        //message = string.Empty;
+                        while (true)
                         {
-                            buffer[j] = (byte)(char)stream.ReadByte();
-                        }
-                        message = buffer;
-                        break;
-                        //Read the first 8 bytes to determin the entire msg length
-                        //read the msg length and the 8 bytes that we have already read
-                            //into a buffer of length of the msg length read
-                        //save buffer into queue
-
-
-                        /*
-                        if ((char)byteReceived == '|')
-                        {
-                            int sz = stream.Read(buffer, 0, 7);
-
-                            long size = BitConverter.ToInt64(buffer,0);
-                            for (int i = 0; i < size - 8; i++)
-                            {
-                                byteReceived = stream.ReadByte();
-                                message += (char)byteReceived;
-                            }
                             
-                            break;
-                        }*/
+                            buffer = new byte[4];
 
-                    }
-                    msgQueue.Enqueue(message);
-                    Debug.Log(message);
+                            int index = 0; int res = 0;
+                            while (index != 4)
+                            {
+                                res = stream.ReadByte();
+                                if (res >= 0)
+                                {
+                                    buffer[index++] = (byte)(char)res;
+                                }
+                            }
+                            Int32 msgSize = cc.ByteInt32(buffer);
+                            if (msgSize < 9)
+                                break;
+                            Debug.Log("Read message size.");
+
+                            
+                            message = new byte[msgSize]; 
+                            Array.Copy(buffer, 0, message, 0, 4);
+
+                           
+                            index = 4; res = 0;
+                            while (index != msgSize && msgSize > 0)
+                            {
+                                res = stream.ReadByte();
+                                if (res >= 0)
+                                {
+                                    message[index++] = (byte)(char)res;
+                                }
+                                //stream.Read(message, 4, msgSize);
+                            }
+                            //message = buffer;
+                            msgQueue.Enqueue(message);
+                            break;
+                        }
+
                 }
             }
             catch (SocketException e)
@@ -164,3 +152,4 @@ namespace SmashDomeNetwork
 
     }
 }
+
