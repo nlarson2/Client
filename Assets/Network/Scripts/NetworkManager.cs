@@ -164,6 +164,7 @@ namespace SmashDomeNetwork
                 case MsgType.LOGIN:
                     LoginMsg msg = cc.DeserializeLiMSG(MSG);
                     Debug.Log("login");
+                    Debug.Log(msg.from);
                     id = msg.from;
                     Login(id);
                     break;

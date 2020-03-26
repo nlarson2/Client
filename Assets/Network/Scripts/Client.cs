@@ -109,6 +109,7 @@ namespace SmashDomeNetwork
                                 if (res >= 0)
                                 {
                                     buffer[index++] = (byte)(char)res;
+                                    
                                 }
                             }
                             Int32 msgSize = cc.ByteInt32(buffer);
@@ -130,6 +131,11 @@ namespace SmashDomeNetwork
                                     message[index++] = (byte)(char)res;
                                 }
                                 //stream.Read(message, 4, msgSize);
+                            }
+                            if (cc.ByteInt32(message[4]) == 1)
+                            {
+                                LoginMsg msg = cc.DeserializeLiMSG(message);
+                                Debug.Log(msg.from);
                             }
                             //message = buffer;
                             msgQueue.Enqueue(message);
