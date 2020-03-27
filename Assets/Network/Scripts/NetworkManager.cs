@@ -120,7 +120,15 @@ namespace SmashDomeNetwork
                 obj.GetComponent<MeshFilter>().mesh = mesh;
                 mesh.Clear();
                 mesh.vertices = structMsg.vertices;
+                /*for (int i = 0; i < structMsg.vertices.Length; i++)
+                    Debug.Log(structMsg.vertices.Length[i]);*/
+                Debug.Log("This is for vertices:");
+                Debug.Log(structMsg.vertices.Length);
                 //Debug.Log(structMsg.vertices.Length);
+                Debug.Log("This is for triangles:");
+                Debug.Log(structMsg.triangles.Length);
+                /*for (int i = 0; i < structMsg.triangles.Length; i++)
+                    Debug.Log(structMsg.triangles[i]);*/
                 mesh.triangles = structMsg.triangles;
                 
             }
