@@ -48,7 +48,8 @@ namespace SmashDomeNetwork
                 try
                 {
                     stream = cli.GetStream();
-                    Console.WriteLine("Connected\n");
+                    // Console.WriteLine("Connected\n");
+                    Debug.Log("Connected");
                     //start receiving messages
                     Thread t = new Thread(RecvMsg);
                     t.Start();
@@ -68,8 +69,11 @@ namespace SmashDomeNetwork
         public void SendMsg(byte[] msg)
         {
             //Debug.Log(msg);
+            //Debug.Log(cc.DeserializeMSG(msg));
+            // Debug.Log("This is Client's Message type : " + cc.ByteInt32(msg[4]));
             try
             {
+                
                 stream.Write(msg, 0, msg.Length);
                 Console.WriteLine("MESSAGE SENT");
 
@@ -132,12 +136,6 @@ namespace SmashDomeNetwork
                                 }
                                 //stream.Read(message, 4, msgSize);
                             }
-                            if (cc.ByteInt32(message[4]) == 1)
-                            {
-                                LoginMsg msg = cc.DeserializeLiMSG(message);
-                                Debug.Log(msg.from);
-                            }
-                            //message = buffer;
                             msgQueue.Enqueue(message);
                             break;
                         }

@@ -120,6 +120,7 @@ namespace SmashDomeNetwork
                 obj.GetComponent<MeshFilter>().mesh = mesh;
                 mesh.Clear();
                 mesh.vertices = structMsg.vertices;
+                //Debug.Log(structMsg.vertices.Length);
                 mesh.triangles = structMsg.triangles;
                 
             }
@@ -140,7 +141,7 @@ namespace SmashDomeNetwork
         {
             byte[] newMsg;
             while (true)
-            {
+            {  
                 
                 while (client.msgQueue.Count > 0)
                 {
@@ -164,7 +165,6 @@ namespace SmashDomeNetwork
                 case MsgType.LOGIN:
                     LoginMsg msg = cc.DeserializeLiMSG(MSG);
                     Debug.Log("login");
-                    Debug.Log(msg.from);
                     id = msg.from;
                     Login(id);
                     break;
@@ -204,7 +204,7 @@ namespace SmashDomeNetwork
         public void Login(int id)
         { 
             LoginMsg outgoing = new LoginMsg(id);
-            outgoing.from = id;
+            Debug.Log("Login ID: " + id);
             client.SendMsg(cc.SerializeMSG(outgoing));
         }
 
@@ -212,6 +212,7 @@ namespace SmashDomeNetwork
         {
             
             MoveMsg msg = cc.DeserializeMMSG(MSG);
+            Debug.Log("Login ID: " + msg.from);
             try
             {
                 //Debug.Log(json);
@@ -285,10 +286,11 @@ namespace SmashDomeNetwork
             return s;
         }
 
-        public void SendMsg(Message msg)
-        {
-            byte[] MSG = cc.SerializeMSG(msg);
-            client.SendMsg(MSG);
+        public void SendMsg(byte[] msg)
+        {   
+            // byte[] MSG = cc.SerializeMSG(msg);
+            // Debug.Log("This is the message type:" + msg.from);
+            client.SendMsg(msg);
 
         }
 

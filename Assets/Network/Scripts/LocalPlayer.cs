@@ -29,7 +29,7 @@ public class LocalPlayer : MonoBehaviour
     public GameObject rHand;
 
 
-
+    public Cerealize cc = new Cerealize();
     
     void Update()
     {
@@ -53,8 +53,9 @@ public class LocalPlayer : MonoBehaviour
             movementMsg.pos = transform.position;
             movementMsg.playerRotation = transform.rotation;
             movementMsg.cameraRotation = camera.transform.rotation;
+            byte[] msg = cc.SerializeMSG(movementMsg);
             
-            networkManager.SendMsg(movementMsg);
+            networkManager.SendMsg(msg);
             time = 0;
         }
 

@@ -13,6 +13,7 @@ public class Shoot : MonoBehaviour
     public float fireRate = 0.5f;
     float curtime = 0.0f;
     bool mousedown = false;
+    public Cerealize cc = new Cerealize();
     // Update is called once per frame
     void Update()
     {
@@ -42,7 +43,8 @@ public class Shoot : MonoBehaviour
             ShootMsg shootmsg = new ShootMsg(netManager.id);
             shootmsg.position = bull.transform.position;
             shootmsg.direction = cam.forward;
-            netManager.SendMsg(shootmsg);
+            byte[] msg = cc.SerializeMSG(shootmsg);
+            netManager.SendMsg(msg);
             curtime = 0;
         }
 
