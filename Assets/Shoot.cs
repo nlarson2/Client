@@ -42,7 +42,7 @@ public class Shoot : MonoBehaviour
             ShootMsg shootmsg = new ShootMsg(netManager.id);
             shootmsg.position = bull.transform.position;
             shootmsg.direction = cam.forward;
-            netManager.SendMsg(shootmsg);
+            netManager.SendMsg(shootmsg.GetBytes());
             curtime = 0;
         }
 

@@ -54,7 +54,7 @@ public class LocalPlayer : MonoBehaviour
             movementMsg.playerRotation = transform.rotation;
             movementMsg.cameraRotation = camera.transform.rotation;
             
-            networkManager.SendMsg(movementMsg);
+            networkManager.SendMsg(movementMsg.GetBytes());
             time = 0;
         }
 
