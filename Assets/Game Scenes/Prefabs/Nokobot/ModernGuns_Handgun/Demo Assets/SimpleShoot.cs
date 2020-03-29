@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define VR
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -29,10 +30,16 @@ public class SimpleShoot : MonoBehaviour
 
     void Update()
     {
+#if VR
         if (interactable.attachedToHand != null)
         {
             SteamVR_Input_Sources source = interactable.attachedToHand.handType;
             if(fireAction[source].stateDown) {
+#else
+        if(Input.GetKey(KeyCode.Mouse0))
+        {
+            if (true) { 
+#endif  
                 //Shoot();
                 //CasingRelease();
                 animator.Play("Shooting",0,0);
@@ -50,8 +57,8 @@ public class SimpleShoot : MonoBehaviour
        Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation).GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
        tempFlash = Instantiate(muzzleFlashPrefab, barrelLocation.position, barrelLocation.rotation);
 
-       // Destroy(tempFlash, 0.5f);
-        //  Instantiate(casingPrefab, casingExitLocation.position, casingExitLocation.rotation).GetComponent<Rigidbody>().AddForce(casingExitLocation.right * 100f);
+       Destroy(tempFlash, 0.5f);
+            //Instantiate(casingPrefab, casingExitLocation.position, casingExitLocation.rotation).GetComponent<Rigidbody>().AddForce(casingExitLocation.right * 100f);
        
     }
 

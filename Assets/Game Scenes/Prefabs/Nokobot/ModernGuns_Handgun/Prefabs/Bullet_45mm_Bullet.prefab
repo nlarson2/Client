@@ -89,7 +89,8 @@ GameObject:
   - component: {fileID: 4617562620070314}
   - component: {fileID: 54754061181521972}
   - component: {fileID: 135553686393699058}
-  - component: {fileID: 301364543818952057}
+  - component: {fileID: 7139478903853861745}
+  - component: {fileID: 25068695871969663}
   m_Layer: 0
   m_Name: Bullet_45mm_Bullet
   m_TagString: Untagged
@@ -141,7 +142,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.02
   m_Center: {x: 0, y: 0, z: 0.04}
---- !u!114 &301364543818952057
+--- !u!114 &7139478903853861745
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,6 +151,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1900734910723676}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e886ad190fc263b44899f62ec09de028, type: 3}
+  m_Script: {fileID: 11500000, guid: 30d5b5ed2b506704b8a8ce832159e5a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  liveTime: 10
+--- !u!114 &25068695871969663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900734910723676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 028a3176c09692245a6c726fd7412973, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  muzzleFlashPrefab: {fileID: 1782395880954752, guid: e802c9c5b472d2345a808aca4bc81014,
+    type: 3}

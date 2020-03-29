@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 8146699476456005188}
   - component: {fileID: 4783672749110765348}
   - component: {fileID: 602142191695332217}
+  - component: {fileID: 4631428475548532318}
   m_Layer: 0
   m_Name: Bullet_45mm_Casing
   m_TagString: Untagged
@@ -239,3 +240,16 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   interactable: {fileID: 0}
+--- !u!114 &4631428475548532318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482960508195586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30d5b5ed2b506704b8a8ce832159e5a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  liveTime: 6
