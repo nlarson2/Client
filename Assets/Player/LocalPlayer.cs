@@ -23,8 +23,9 @@ public class LocalPlayer : MonoBehaviour
     public Quaternion PrevRotate;
     public Quaternion PrevLHandRot;
     public Quaternion PrevRHandRot;
+    public int playerType;
 
-    public new Transform camera;
+    public Transform camera;
     public GameObject lHand;
     public GameObject rHand;
 
@@ -49,12 +50,29 @@ public class LocalPlayer : MonoBehaviour
                 PrevRotate.x != transform.rotation.x)
             )
         {
-            MoveMsg movementMsg = new MoveMsg(networkManager.id);
-            movementMsg.pos = transform.position;
-            movementMsg.playerRotation = transform.rotation;
-            movementMsg.cameraRotation = camera.transform.rotation;
-            
-            networkManager.SendMsg(movementMsg.GetBytes());
+            if (playerType == 1)
+            {
+                MoveMsg movementMsg = new MoveMsg(networkManager.id);
+                movementMsg.pos = transform.position;
+                movementMsg.playerRotation = transform.rotation;
+                movementMsg.cameraRotation = camera.transform.rotation;
+
+                networkManager.SendMsg(movementMsg.GetBytes());
+
+            }
+            else if(playerType == 2) 
+            {
+                MoveVRMsg movementMsg = new MoveVRMsg(networkManager.id);
+                movementMsg.pos = transform.position;
+                movementMsg.playerRotation = transform.rotation;
+                movementMsg.cameraRotation = camera.transform.rotation;
+                movementMsg.lHandPosition = lHand.transform.localPosition;
+                movementMsg.rHandPosition = rHand.transform.localPosition;
+                movementMsg.lHandRotation = lHand.transform.localRotation;
+                movementMsg.rHandRotation = rHand.transform.localRotation;
+
+                networkManager.SendMsg(movementMsg.GetBytes());
+            }
             time = 0;
         }
 

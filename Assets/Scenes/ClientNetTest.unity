@@ -573,13 +573,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  playerType: 1
+  playerType: 2
   localPlayer: {fileID: 0}
   playerPrefab: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
     type: 3}
   PCPlayer: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
     type: 3}
-  VRPlayer: {fileID: 0}
+  VRPlayer: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
+    type: 3}
   StructurePrefab: {fileID: 7368568842321067293, guid: 531473b8e4c0fbe41a350e0e245737d6,
     type: 3}
   bulletPrefab: {fileID: 6940828250910360934, guid: 4c49c38fad551f843b63913640caa567,
