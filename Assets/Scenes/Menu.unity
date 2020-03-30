@@ -156,9 +156,11 @@ MonoBehaviour:
     type: 3}
   PCPlayer: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
     type: 3}
+  VRPlayer: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
+    type: 3}
   StructurePrefab: {fileID: 7368568842321067293, guid: 531473b8e4c0fbe41a350e0e245737d6,
     type: 3}
-  bulletPrefab: {fileID: 6940828250910360934, guid: 4c49c38fad551f843b63913640caa567,
+  bulletPrefab: {fileID: 1900734910723676, guid: 70d5a147b9ed291458f1333306dcf70c,
     type: 3}
 --- !u!4 &78537013
 Transform:

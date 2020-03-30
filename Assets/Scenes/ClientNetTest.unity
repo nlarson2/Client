@@ -377,7 +377,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 4e-45}
+  m_BoundingSphereOverride: {x: 4.851e-42, y: 0.36285096, z: -0.0031820452, w: -0.013541068}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -545,7 +545,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1401818061
 Transform:
   m_ObjectHideFlags: 0
@@ -574,11 +574,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   playerType: 1
-  localPlayer: {fileID: 1179009380}
+  localPlayer: {fileID: 0}
   playerPrefab: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
     type: 3}
   PCPlayer: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
     type: 3}
+  VRPlayer: {fileID: 0}
   StructurePrefab: {fileID: 7368568842321067293, guid: 531473b8e4c0fbe41a350e0e245737d6,
     type: 3}
   bulletPrefab: {fileID: 6940828250910360934, guid: 4c49c38fad551f843b63913640caa567,

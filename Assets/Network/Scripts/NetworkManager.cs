@@ -20,6 +20,7 @@ namespace SmashDomeNetwork
             public int type;
             public GameObject obj;
             public Player playerControl;
+            public int playerType;
         };
 
         public int id = 0;
@@ -36,6 +37,7 @@ namespace SmashDomeNetwork
 
         public GameObject playerPrefab;
         public GameObject PCPlayer;
+        public GameObject VRPlayer;
         public GameObject StructurePrefab;
         public GameObject bulletPrefab;
 
@@ -87,8 +89,12 @@ namespace SmashDomeNetwork
                 int playerID = addPlayerQ.Dequeue();
                 PlayerData player = players[playerID];
                 if (player.id != this.id)
-                {
-                    player.obj = Instantiate(PCPlayer, GetComponentInChildren<Transform>());
+                {   
+                    if(playerType == 2)
+                        player.obj = Instantiate(VRPlayer, GetComponentInChildren<Transform>());
+                    else
+                        player.obj = Instantiate(PCPlayer, GetComponentInChildren<Transform>());
+
                     player.playerControl = player.obj.GetComponent<Player>();
                     player.obj.name = "NetworkPlayer:" + player.id;
                     players.Remove(playerID);
@@ -163,6 +169,7 @@ namespace SmashDomeNetwork
                     Debug.Log("login");
                     LoginMsg login = new LoginMsg(bytes);
                     id = login.from;
+                    login.playerType = this.playerType;
                     Login(bytes);
                     break;
                 case MsgType.LOGOUT:
@@ -219,6 +226,28 @@ namespace SmashDomeNetwork
             }
         }
 
+        public void MoveVR(byte[] move)
+        {
+
+            MoveVRMsg msg = new MoveVRMsg(move);
+            try
+            {
+                //Debug.Log(json);
+                Player player = players[msg.from].playerControl;
+                player.position = msg.pos;
+                player.rotation = msg.playerRotation;
+                player.cameraRotation = msg.cameraRotation;
+                player.lHandPos = msg.lHandPosition;
+                player.rHandPos = msg.rHandPosition;
+                player.lHandRot = msg.lHandRotation;
+                player.rHandRot = msg.rHandRotation;
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+        }
+
         public void AddPlayer(byte[] addPlayer)
         {
             AddPlayerMsg msg = new AddPlayerMsg(addPlayer);
@@ -226,6 +255,7 @@ namespace SmashDomeNetwork
             {
                 PlayerData player = new PlayerData();
                 player.id = msg.from;
+                player.playerType = msg.playerType;
                 //player.type = msg.msgType;
                 addPlayerQ.Enqueue(player.id);
                 players.Add(player.id, player);
