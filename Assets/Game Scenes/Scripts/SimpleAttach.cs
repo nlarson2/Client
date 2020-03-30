@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿    using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -35,8 +35,8 @@ public class SimpleAttach : MonoBehaviour
         }
         else if(isGrabEnding)
         {
-            hand.DetachObject(gameObject);
-            hand.HoverUnlock(interactable);
+           // hand.DetachObject(gameObject);
+            ///hand.HoverUnlock(interactable);
         }
     }
 }

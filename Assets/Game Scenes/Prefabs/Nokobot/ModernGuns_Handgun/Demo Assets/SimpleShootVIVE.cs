@@ -5,7 +5,7 @@ using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 
-public class SimpleShoot : MonoBehaviour
+public class SimpleShootVIVE : MonoBehaviour
 {
 
     public SteamVR_Action_Boolean fireAction;
@@ -30,6 +30,15 @@ public class SimpleShoot : MonoBehaviour
 
     void Update()
     {
+        if (interactable.attachedToHand != null)
+        {
+            SteamVR_Input_Sources source = interactable.attachedToHand.handType;
+            if(fireAction[source].stateDown) { 
+                //Shoot();
+                //CasingRelease();
+                animator.Play("Shooting",0,0);
+            }
+        }
     }
 
     void Shoot()

@@ -43,7 +43,7 @@ namespace Valve.VR
 
         /// <summary><strong>[Shortcut to: SteamVR_Input_Sources.Any]</strong> The current Vector2 value of the action.
         /// Note: Will only return non-zero if the action is also active.</summary>
-        public Vector2 axis { get { return sourceMap[SteamVR_Input_Sources.Any].axis; } }
+       public Vector2 axis { get { return sourceMap[SteamVR_Input_Sources.Any].axis; } }
 
         /// <summary><strong>[Shortcut to: SteamVR_Input_Sources.Any]</strong> The Vector2 value of the action from the previous update.
         /// Note: Will only return non-zero if the action is also active.</summary>

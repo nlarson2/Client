@@ -5,7 +5,7 @@ using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 
-public class SimpleShoot : MonoBehaviour
+public class SimpleShootPC : MonoBehaviour
 {
 
     public SteamVR_Action_Boolean fireAction;
@@ -30,6 +30,12 @@ public class SimpleShoot : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            //Shoot();
+            //CasingRelease();
+            animator.Play("Shooting",0,0);
+        }
     }
 
     void Shoot()

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4278816300486822}
   - component: {fileID: 33540230160870462}
   - component: {fileID: 23970209400704162}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Pistol_45mm_bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,9 +91,9 @@ GameObject:
   - component: {fileID: 135553686393699058}
   - component: {fileID: 7139478903853861745}
   - component: {fileID: 25068695871969663}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bullet_45mm_Bullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
