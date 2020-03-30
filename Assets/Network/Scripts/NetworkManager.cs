@@ -182,6 +182,11 @@ namespace SmashDomeNetwork
                     Debug.Log("Move");
                     Move(bytes);
                     break;
+                case MsgType.MOVEVR:
+                    //MoveMsg move = new MoveMsg(bytes);
+                    Debug.Log("MoveVR");
+                    MoveVR(bytes);
+                    break;
                 case MsgType.SHOOT:
                     Shoot(bytes);
                     break;

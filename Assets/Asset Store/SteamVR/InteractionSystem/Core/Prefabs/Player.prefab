@@ -221,6 +221,7 @@ GameObject:
   - component: {fileID: 3049208654490847096}
   - component: {fileID: 4624170481089133864}
   - component: {fileID: 8465255055965599069}
+  - component: {fileID: 436577482}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -323,6 +324,30 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.4, z: 0}
+--- !u!114 &436577482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e4ad2fc55284394897cf47f3d33b442, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 100
+  time: 0
+  PrevPosition: {x: 0, y: 0, z: 0}
+  PrevLHandPos: {x: 0, y: 0, z: 0}
+  PrevRHandPos: {x: 0, y: 0, z: 0}
+  PrevRotate: {x: 0, y: 0, z: 0, w: 0}
+  PrevLHandRot: {x: 0, y: 0, z: 0, w: 0}
+  PrevRHandRot: {x: 0, y: 0, z: 0, w: 0}
+  playerType: 2
+  camera: {fileID: 429506}
+  lHand: {fileID: 144230}
+  rHand: {fileID: 160596}
 --- !u!1 &109154
 GameObject:
   m_ObjectHideFlags: 0

@@ -2147,6 +2147,7 @@ MonoBehaviour:
   PrevRotate: {x: 0, y: 0, z: 0, w: 0}
   PrevLHandRot: {x: 0, y: 0, z: 0, w: 0}
   PrevRHandRot: {x: 0, y: 0, z: 0, w: 0}
+  playerType: 1
   camera: {fileID: 3933733783132575141}
   lHand: {fileID: 3171324128975639991}
   rHand: {fileID: 3776397751599318999}
