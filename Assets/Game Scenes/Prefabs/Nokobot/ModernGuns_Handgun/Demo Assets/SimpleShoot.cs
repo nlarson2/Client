@@ -36,7 +36,7 @@ public class SimpleShoot : MonoBehaviour
             SteamVR_Input_Sources source = interactable.attachedToHand.handType;
             if(fireAction[source].stateDown) {
 #else
-        if(Input.GetKey(KeyCode.Mouse0))
+        if(Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (true) { 
 #endif  
@@ -52,7 +52,7 @@ public class SimpleShoot : MonoBehaviour
         //  GameObject bullet;
         //  bullet = Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation);
         // bullet.GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
-
+        print("shoot");
         GameObject tempFlash;
        Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation).GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
        tempFlash = Instantiate(muzzleFlashPrefab, barrelLocation.position, barrelLocation.rotation);

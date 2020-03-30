@@ -10,10 +10,10 @@ public class Control : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(Player);
     }
     public void NextScene()
     {
-        Destroy(Player);
-        SceneManager.LoadScene("Test Room");    
+        SceneManager.LoadScene("ClientNetTest");    
     }
 }

@@ -63,4 +63,5 @@ public class LocalPlayer : MonoBehaviour
         PrevRotate.x = camera.rotation.x;
         PrevRotate.y = transform.rotation.y;
     }
+
 }

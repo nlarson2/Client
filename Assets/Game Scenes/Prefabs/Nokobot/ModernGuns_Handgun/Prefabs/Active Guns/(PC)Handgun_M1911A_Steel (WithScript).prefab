@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7248529680148448972}
   - component: {fileID: 7273492844045289894}
   - component: {fileID: 7265796911004000014}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 7244359603536498822}
   - component: {fileID: 7277765254112735482}
   - component: {fileID: 7265683145456132162}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,7 +168,7 @@ GameObject:
   - component: {fileID: 7244389182107599282}
   - component: {fileID: 7337274841516570940}
   - component: {fileID: 7286762718723186758}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: (PC)Handgun_M1911A_Steel (WithScript)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,9 +182,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7242397895677683400}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 0.5333333, y: 0.39999998, z: 0.5333334}
   m_Children:
   - {fileID: 7248496724111088230}
   - {fileID: 7244359292715779740}
@@ -226,9 +226,9 @@ MonoBehaviour:
   fireAction:
     actionPath: 
     needsReinit: 0
-  bulletPrefab: {fileID: 1900734910723676, guid: 67c3c990b6c48af469e31db314977502,
+  bulletPrefab: {fileID: 1900734910723676, guid: 70d5a147b9ed291458f1333306dcf70c,
     type: 3}
-  casingPrefab: {fileID: 1482960508195586, guid: 91dcfdffdc6d38e47916b9c549e26dac,
+  casingPrefab: {fileID: 1482960508195586, guid: 5c3d50ba44225374fa142ad33cf7eb86,
     type: 3}
   muzzleFlashPrefab: {fileID: 1782395880954752, guid: e802c9c5b472d2345a808aca4bc81014,
     type: 3}
@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 7248496724111088230}
   - component: {fileID: 7277777764693422386}
   - component: {fileID: 7266113941789583820}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Handgun_M1911A (Model)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -326,7 +326,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7244359292715779740}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: M1911A_Magazine_Steel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -359,7 +359,7 @@ GameObject:
   - component: {fileID: 7248349248792444144}
   - component: {fileID: 7273603081315923598}
   - component: {fileID: 7265884417602203288}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CasingExit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -437,7 +437,7 @@ GameObject:
   - component: {fileID: 7248455378750066020}
   - component: {fileID: 7273648831015714962}
   - component: {fileID: 7265245263314633838}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: M1911A_Magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -515,7 +515,7 @@ GameObject:
   - component: {fileID: 7248116070572920932}
   - component: {fileID: 7274147111151661154}
   - component: {fileID: 7266113387008710676}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -591,7 +591,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7244356648477604120}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CasingExitLocation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -621,7 +621,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7244127352153581878}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BarrelLocation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
