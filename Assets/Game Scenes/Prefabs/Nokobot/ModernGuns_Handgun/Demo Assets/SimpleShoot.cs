@@ -7,8 +7,8 @@ using Valve.VR.InteractionSystem;
 
 public class SimpleShoot : MonoBehaviour
 {
-
-    public SteamVR_Action_Boolean fireAction;
+    private OVRGrabbable ovrGrabbable;
+    public OVRInput.Button shootingButton;
     public GameObject bulletPrefab;
     public GameObject casingPrefab;
     public GameObject muzzleFlashPrefab;
@@ -16,13 +16,12 @@ public class SimpleShoot : MonoBehaviour
     public Transform casingExitLocation;
 
     public float shotPower = 100f;
-
-    private Interactable interactable;
+    
     private Animator animator;
 
     void Start()
     {
-        interactable = GetComponent<Interactable>();
+        ovrGrabbable = GetComponent<OVRGrabbable>();
         animator = GetComponent<Animator>();
         if (barrelLocation == null)
             barrelLocation = transform;
@@ -30,6 +29,11 @@ public class SimpleShoot : MonoBehaviour
 
     void Update()
     {
+        if(ovrGrabbable.isGrabbed && OVRInput.GetDown(shootingButton, ovrGrabbable.grabbedBy.GetController()))
+        {
+            this.gameObject.transform.parent = ovrGrabbable.gameObject.transform;
+            Shoot();
+        }
     }
 
     void Shoot()

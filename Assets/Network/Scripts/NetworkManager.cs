@@ -33,6 +33,7 @@ namespace SmashDomeNetwork
         Queue<int> addPlayerQ = new Queue<int>();
         Queue<int> destroyQ = new Queue<int>();
         Queue<StructureChangeMsg> addStructQ = new Queue<StructureChangeMsg>();
+        Dictionary<int, GameObject> structures = new Dictionary<int, GameObject>();
         Queue<ShootMsg> bulletQ = new Queue<ShootMsg>();
 
         public GameObject playerPrefab;
@@ -119,24 +120,34 @@ namespace SmashDomeNetwork
             while (addStructQ.Count > 0)
             {
                 StructureChangeMsg structMsg = addStructQ.Dequeue();
-                GameObject obj = Instantiate(StructurePrefab, structMsg.pos, Quaternion.identity);
+                GameObject obj;
+                if (structures.ContainsKey(structMsg.from))
+                {
+                    Debug.Log("ALREADY EXISTS");
+                    obj = structures[structMsg.from];
+                }
+                else {
+                    obj = Instantiate(StructurePrefab, structMsg.pos, Quaternion.identity);
+                    structures.Add(structMsg.from, obj);
+                }
                 Mesh mesh = new Mesh();
                 obj.GetComponent<MeshFilter>().mesh = mesh;
                 mesh.Clear();
                 mesh.vertices = structMsg.Vertices;
                 mesh.triangles = structMsg.Triangles;
                 
+                
             }
 
             while(bulletQ.Count > 0)
             {
                 ShootMsg shoot = bulletQ.Dequeue();
-                GameObject bull = Instantiate(bulletPrefab, shoot.position, transform.rotation);
-                Rigidbody rig = bull.GetComponent<Rigidbody>();
-                rig.useGravity = false;
+                //GameObject bull = Instantiate(bulletPrefab, shoot.position, transform.rotation);
+                //Rigidbody rig = bull.GetComponent<Rigidbody>();
+                //rig.useGravity = false;
                 //rig.AddForce(Physics.gravity * (rig.mass * rig.mass));
                 //rig.AddForce((transform.forward + transform.up / 4) * 2.0f);
-                rig.AddForce(shoot.direction);
+                //rig.AddForce(shoot.direction);
             }
         }
 
