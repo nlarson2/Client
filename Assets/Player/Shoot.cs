@@ -7,8 +7,8 @@ public class Shoot : MonoBehaviour
 {
 
     NetworkManager netManager;
-    public GameObject bullet;
-    public Transform cam;
+    public GameObject start;
+    public GameObject direction;
     public bool hasGravity = true;
     public float fireRate = 0.5f;
     float curtime = 0.0f;
@@ -38,12 +38,12 @@ public class Shoot : MonoBehaviour
             rig.useGravity = false;
             //rig.AddForce(Physics.gravity * (rig.mass * rig.mass));
             //rig.AddForce((transform.forward + transform.up / 4) * 2.0f);
-            rig.AddForce(cam.forward);
+            rig.AddForce(cam.forward);*/
             ShootMsg shootmsg = new ShootMsg(netManager.id);
-            shootmsg.position = bull.transform.position;
-            shootmsg.direction = cam.forward;
+            shootmsg.position = start.transform.position;
+            shootmsg.direction = direction.transform.position-shootmsg.position;
             netManager.SendMsg(shootmsg.GetBytes());
-            curtime = 0;*/
+            /*curtime = 0;*/
         }
 
     }

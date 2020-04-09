@@ -131,12 +131,12 @@ namespace SmashDomeNetwork
             while(bulletQ.Count > 0)
             {
                 ShootMsg shoot = bulletQ.Dequeue();
-                GameObject bull = Instantiate(bulletPrefab, shoot.position, transform.rotation);
-                Rigidbody rig = bull.GetComponent<Rigidbody>();
-                rig.useGravity = false;
+                //GameObject bull = Instantiate(bulletPrefab, shoot.position, transform.rotation);
+                //Rigidbody rig = bull.GetComponent<Rigidbody>();
+                //rig.useGravity = false;
                 //rig.AddForce(Physics.gravity * (rig.mass * rig.mass));
                 //rig.AddForce((transform.forward + transform.up / 4) * 2.0f);
-                rig.AddForce(shoot.direction);
+                //rig.AddForce(shoot.direction);
             }
         }
 
