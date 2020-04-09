@@ -9,8 +9,9 @@ public class Shoot : MonoBehaviour
     NetworkManager netManager;
     public GameObject start;
     public GameObject direction;
+    public GameObject gun;
     public bool hasGravity = true;
-    public float fireRate = 0.5f;
+    public float fireRate = 0.2f; // Was 0.5f, seemed too slow.
     float curtime = 0.0f;
     bool mousedown = false;
     // Update is called once per frame
@@ -42,8 +43,11 @@ public class Shoot : MonoBehaviour
             ShootMsg shootmsg = new ShootMsg(netManager.id);
             shootmsg.position = start.transform.position;
             shootmsg.direction = direction.transform.position-shootmsg.position;
+            shootmsg.rotation = gun.transform.rotation;
+            //shootmsg.direction = transform.rotation * Vector3.forward;
+ 
             netManager.SendMsg(shootmsg.GetBytes());
-            /*curtime = 0;*/
+            curtime = 0;
         }
 
     }
