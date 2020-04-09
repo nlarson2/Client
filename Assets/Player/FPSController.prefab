@@ -1042,6 +1042,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   start: {fileID: 4369204292710418739}
   direction: {fileID: 1444910555654948863}
+  gun: {fileID: 3933733783132801415}
   hasGravity: 1
   fireRate: 1
 --- !u!1 &4369204292710418739
@@ -1180,6 +1181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   start: {fileID: 0}
   direction: {fileID: 0}
+  gun: {fileID: 0}
   hasGravity: 1
   fireRate: 0.5
 --- !u!1001 &1906808537295088599
