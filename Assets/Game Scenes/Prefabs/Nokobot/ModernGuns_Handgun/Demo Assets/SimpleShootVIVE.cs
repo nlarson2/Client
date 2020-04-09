@@ -14,6 +14,7 @@ public class SimpleShootVIVE : MonoBehaviour
     public GameObject muzzleFlashPrefab;
     public Transform barrelLocation;
     public Transform casingExitLocation;
+    public int magCap, bulletCount;
 
     public float shotPower = 100f;
 
@@ -24,6 +25,7 @@ public class SimpleShootVIVE : MonoBehaviour
     {
         interactable = GetComponent<Interactable>();
         animator = GetComponent<Animator>();
+        bulletCount = magCap = 8;
         if (barrelLocation == null)
             barrelLocation = transform;
     }
@@ -32,12 +34,15 @@ public class SimpleShootVIVE : MonoBehaviour
     {
         if (interactable.attachedToHand != null)
         {
+            if(true/*bulletCount > 0*/)
+            { 
             SteamVR_Input_Sources source = interactable.attachedToHand.handType;
-            if(fireAction[source].stateDown) { 
-                //Shoot();
-                //CasingRelease();
-                animator.Play("Shooting",0,0);
-            }
+                if (fireAction[source].stateDown)
+                {
+                    //bulletCount--;
+                    animator.Play("Shooting", 0, 0);
+                }
+             }
         }
     }
 
@@ -46,12 +51,12 @@ public class SimpleShootVIVE : MonoBehaviour
         //  GameObject bullet;
         //  bullet = Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation);
         // bullet.GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
-        print("shoot");
-        GameObject tempFlash;
-       Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation).GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
-       tempFlash = Instantiate(muzzleFlashPrefab, barrelLocation.position, barrelLocation.rotation);
+            print("shoot");
+            GameObject tempFlash;
+            Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation).GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
+            tempFlash = Instantiate(muzzleFlashPrefab, barrelLocation.position, barrelLocation.rotation);
 
-       Destroy(tempFlash, 0.5f);
+            Destroy(tempFlash, 0.5f);
             //Instantiate(casingPrefab, casingExitLocation.position, casingExitLocation.rotation).GetComponent<Rigidbody>().AddForce(casingExitLocation.right * 100f);
        
     }
