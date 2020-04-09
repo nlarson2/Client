@@ -135,6 +135,9 @@ namespace SmashDomeNetwork
                 mesh.Clear();
                 mesh.vertices = structMsg.Vertices;
                 mesh.triangles = structMsg.Triangles;
+                mesh.RecalculateNormals();
+                MeshCollider collider = this.GetComponent<MeshCollider>();
+                collider.sharedMesh = mesh;
                 
                 
             }
