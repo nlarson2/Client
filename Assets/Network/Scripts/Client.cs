@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine;
-
+using SmashDomeNetwork;
 
 
 public class Client
@@ -16,12 +16,12 @@ public class Client
     NetworkStream stream;
 
     //queue to store messages in order
-    public Queue<string> msgQueue;
+    public Queue<byte[]> msgQueue;
 
 
     public Client()
     {
-        msgQueue = new Queue<string>();
+        msgQueue = new Queue<byte[]>();
     }
 
     public void Connect()
@@ -30,8 +30,8 @@ public class Client
         cli = new TcpClient();
         try
         {
-            cli.Connect("smashdome2.hopto.org", 44444);
-            //cli.Connect("localhost", 50000);
+            cli.Connect("smashdome3d.hopto.org", 44444);
+            //cli.Connect("localhost", 44444);
         }
         catch (Exception e)
         {
@@ -62,14 +62,13 @@ public class Client
     }
 
     //function that can be used to send messages to the server
-    public void SendMsg(string msg)
+    public void SendMsg(byte[] msg)
     {
-        byte[] send = System.Text.ASCIIEncoding.ASCII.GetBytes(msg);
-        //Debug.Log(msg);
         try
         {
-            stream.Write(send, 0, send.Length);
+            stream.Write(msg, 0, msg.Length);
             Console.WriteLine("MESSAGE SENT");
+            Debug.Log("MESSAGE SENT");
 
         }
         catch (SocketException e)
@@ -90,7 +89,7 @@ public class Client
             {
                 //used to determine level of json msg
                 //Some json msgs will have multiple sets of brackets
-                int brackets = 0;
+                /*int brackets = 0;
                 json = string.Empty;
                 while (true)
                 {
@@ -103,7 +102,36 @@ public class Client
                     if(brackets == 0)
                         break;
                 }
-                msgQueue.Enqueue(json);
+                msgQueue.Enqueue(json);*/
+                /*byte[] sizeInBytes =
+                    {
+                        (byte)stream.ReadByte(),
+                        (byte)stream.ReadByte(),
+                        (byte)stream.ReadByte(),
+                        (byte)stream.ReadByte()
+
+                    };*/
+                //Debug.Log("GOT SIZE");
+                //int size = Message.BytesToInt(sizeInBytes);
+                //Debug.Log(String.Format("SIZE: {0}", size));
+                //if (size < 0) continue;
+                //byte[] msg = new byte[size];
+                List<byte> byteList = new List<byte>();
+                int delimCount = 0;
+                /*for (int i = 0; i < size; i++)
+                {
+                    msg[i] = (byte)stream.ReadByte();
+                    Debug.Log("READING");
+                }*/
+                while (delimCount < 8)
+                {
+                    byte inByte = (byte)stream.ReadByte();
+                    byteList.Add(inByte);
+                    delimCount = (char)inByte == '\n' ? delimCount + 1 : 0;
+                }
+
+                msgQueue.Enqueue(byteList.ToArray());
+                Debug.Log("ENQUEUED");
             }
         }
         catch (SocketException e)

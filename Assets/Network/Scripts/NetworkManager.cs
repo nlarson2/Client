@@ -20,6 +20,7 @@ namespace SmashDomeNetwork
             public int type;
             public GameObject obj;
             public Player playerControl;
+            public int playerType;
         };
 
         public int id = 0;
@@ -32,10 +33,12 @@ namespace SmashDomeNetwork
         Queue<int> addPlayerQ = new Queue<int>();
         Queue<int> destroyQ = new Queue<int>();
         Queue<StructureChangeMsg> addStructQ = new Queue<StructureChangeMsg>();
+        Dictionary<int, GameObject> structures = new Dictionary<int, GameObject>();
         Queue<ShootMsg> bulletQ = new Queue<ShootMsg>();
 
         public GameObject playerPrefab;
         public GameObject PCPlayer;
+        public GameObject VRPlayer;
         public GameObject StructurePrefab;
         public GameObject bulletPrefab;
 
@@ -87,8 +90,12 @@ namespace SmashDomeNetwork
                 int playerID = addPlayerQ.Dequeue();
                 PlayerData player = players[playerID];
                 if (player.id != this.id)
-                {
-                    player.obj = Instantiate(PCPlayer, GetComponentInChildren<Transform>());
+                {   
+                    if(playerType == 2)
+                        player.obj = Instantiate(VRPlayer, GetComponentInChildren<Transform>());
+                    else
+                        player.obj = Instantiate(PCPlayer, GetComponentInChildren<Transform>());
+
                     player.playerControl = player.obj.GetComponent<Player>();
                     player.obj.name = "NetworkPlayer:" + player.id;
                     players.Remove(playerID);
@@ -113,33 +120,46 @@ namespace SmashDomeNetwork
             while (addStructQ.Count > 0)
             {
                 StructureChangeMsg structMsg = addStructQ.Dequeue();
-                GameObject obj = Instantiate(StructurePrefab, structMsg.pos, Quaternion.identity);
+                GameObject obj;
+                if (structures.ContainsKey(structMsg.from))
+                {
+                    Debug.Log("ALREADY EXISTS");
+                    obj = structures[structMsg.from];
+                }
+                else {
+                    obj = Instantiate(StructurePrefab, structMsg.pos, Quaternion.identity);
+                    structures.Add(structMsg.from, obj);
+                }
                 Mesh mesh = new Mesh();
                 obj.GetComponent<MeshFilter>().mesh = mesh;
                 mesh.Clear();
-                mesh.vertices = structMsg.vertices;
-                mesh.triangles = structMsg.triangles;
+                mesh.vertices = structMsg.Vertices;
+                mesh.triangles = structMsg.Triangles;
+                mesh.RecalculateNormals();
+                MeshCollider collider = this.GetComponent<MeshCollider>();
+                collider.sharedMesh = mesh;
+                
                 
             }
 
             while(bulletQ.Count > 0)
             {
                 ShootMsg shoot = bulletQ.Dequeue();
-                GameObject bull = Instantiate(bulletPrefab, shoot.position, transform.rotation);
-                Rigidbody rig = bull.GetComponent<Rigidbody>();
-                rig.useGravity = false;
+                //GameObject bull = Instantiate(bulletPrefab, shoot.position, transform.rotation);
+                //Rigidbody rig = bull.GetComponent<Rigidbody>();
+                //rig.useGravity = false;
                 //rig.AddForce(Physics.gravity * (rig.mass * rig.mass));
                 //rig.AddForce((transform.forward + transform.up / 4) * 2.0f);
-                rig.AddForce(shoot.direction);
+                //rig.AddForce(shoot.direction);
             }
         }
 
         public void ReceiveMessages()
         {
-            string newMsg;
+            byte[] newMsg;
             while (true)
             {
-                newMsg = string.Empty;
+                newMsg = null;
                 while (client.msgQueue.Count > 0)
                 {
                     newMsg = client.msgQueue.Dequeue();
@@ -149,61 +169,71 @@ namespace SmashDomeNetwork
             }
         }
 
-        public void TranslateMsg(string json)
+        public void TranslateMsg(byte[] bytes)
         {
             
-            Message msg;
-            msg = JsonUtility.FromJson<Message>(json);
+            /*Message msg;
+            msg = JsonUtility.FromJson<Message>(json);*/
+            int msgType = Message.BytesToInt(Message.GetSegment(4, 4, bytes));
             //Debug.Log(json);
             //translate the messages type and call appropriate fucntion
-            switch ((MsgType)msg.msgType)
+            switch ((MsgType)msgType)
             {
                 case MsgType.LOGIN:
                     Debug.Log("login");
-                    id = msg.from;
-                    Login(id);
+                    LoginMsg login = new LoginMsg(bytes);
+                    id = login.from;
+                    login.playerType = this.playerType;
+                    Login(bytes);
                     break;
                 case MsgType.LOGOUT:
+                    LogoutMsg logout = new LogoutMsg(bytes);
                     Debug.Log("RemovePlayer");
-                    RemovePlayer(msg);
+                    RemovePlayer(logout);
                     break;
                 case MsgType.MOVE:
+                    //MoveMsg move = new MoveMsg(bytes);
                     Debug.Log("Move");
-                    Move(json);
+                    Move(bytes);
+                    break;
+                case MsgType.MOVEVR:
+                    //MoveMsg move = new MoveMsg(bytes);
+                    Debug.Log("MoveVR");
+                    MoveVR(bytes);
                     break;
                 case MsgType.SHOOT:
-                    Shoot(json);
+                    Shoot(bytes);
                     break;
                 case MsgType.ADDPLAYER:
                     Debug.Log("AddPlayer");
-                    AddPlayer(msg);
-                    break;
+                    AddPlayer(bytes);
+                    break;/*
                 case MsgType.SNAPSHOT:
-                    ProcessSnapshot(json);
+                    ProcessSnapshot(bytes);
                     Debug.Log("SnapShot");
-                    break;
+                    break;*/
                 case MsgType.STRUCTURE:
-                    AddStructure(json);
+                    AddStructure(bytes);
                     Debug.Log("Structure");
                     break;
 
             }
         }
 
-        public void Login(int id)
+        public void Login(byte[] msg)
         { 
-            Message outgoing = new LoginMsg(id);
-            outgoing.from = id;
-            client.SendMsg(JsonUtility.ToJson(outgoing));
+            /*LoginMsg outgoing = new LoginMsg(id);
+            outgoing.from = id;*/
+            client.SendMsg(msg);
         }
 
-        public void Move(string json)
+        public void Move(byte[] move)
         {
             
-            MoveMsg msg = JsonUtility.FromJson<MoveMsg>(json);
+            MoveMsg msg = new MoveMsg(move);
             try
             {
-                Debug.Log(json);
+                //Debug.Log(json);
                 Player player = players[msg.from].playerControl;
                 player.position = msg.pos;
                 player.rotation = msg.playerRotation;
@@ -215,21 +245,46 @@ namespace SmashDomeNetwork
             }
         }
 
-        public void AddPlayer(Message msg)
+        public void MoveVR(byte[] move)
         {
+
+            MoveVRMsg msg = new MoveVRMsg(move);
+            try
+            {
+                //Debug.Log(json);
+                Player player = players[msg.from].playerControl;
+                player.position = msg.pos;
+                player.rotation = msg.playerRotation;
+                player.cameraRotation = msg.cameraRotation;
+                player.lHandPos = msg.lHandPosition;
+                player.rHandPos = msg.rHandPosition;
+                player.lHandRot = msg.lHandRotation;
+                player.rHandRot = msg.rHandRotation;
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+        }
+
+        public void AddPlayer(byte[] addPlayer)
+        {
+            AddPlayerMsg msg = new AddPlayerMsg(addPlayer);
             if (msg.from != this.id)
             {
                 PlayerData player = new PlayerData();
                 player.id = msg.from;
+                player.playerType = msg.playerType;
                 //player.type = msg.msgType;
                 addPlayerQ.Enqueue(player.id);
                 players.Add(player.id, player);
             }
         }
-        public void Shoot(string msg)
+        public void Shoot(byte[] shoot)
         {
-            ShootMsg shoot = JsonUtility.FromJson<ShootMsg>(msg);
-            bulletQ.Enqueue(shoot);
+            //ShootMsg shoot = JsonUtility.FromJson<ShootMsg>(msg);
+            ShootMsg msg = new ShootMsg(shoot);
+            bulletQ.Enqueue(msg);
 
         }
         public void ProcessSnapshot(string json)
@@ -255,10 +310,11 @@ namespace SmashDomeNetwork
             }
         }
 
-        public void AddStructure(string json)
+        public void AddStructure(byte[] structMsg)
         {
-            StructureChangeMsg structMsg = JsonUtility.FromJson<StructureChangeMsg>(json);
-            addStructQ.Enqueue(structMsg);
+            //StructureChangeMsg structMsg = JsonUtility.FromJson<StructureChangeMsg>(json);
+            StructureChangeMsg msg = new StructureChangeMsg(structMsg);
+            addStructQ.Enqueue(msg);
         }
 
         public void RemovePlayer(Message msg)
@@ -274,10 +330,10 @@ namespace SmashDomeNetwork
             return System.Text.Encoding.ASCII.GetBytes(s);
         }
 
-        public void SendMsg(Message msg)
+        public void SendMsg(byte[] msg)
         {
-            string json = JsonUtility.ToJson(msg);
-            client.SendMsg(json);
+            
+            client.SendMsg(msg);
 
         }
 
@@ -285,7 +341,7 @@ namespace SmashDomeNetwork
         private void OnApplicationQuit()
         {
             LogoutMsg logOut = new LogoutMsg(this.id);
-            client.SendMsg(JsonUtility.ToJson(logOut));
+            client.SendMsg(logOut.GetBytes());
             client.Close();
         }
 
