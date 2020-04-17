@@ -30,8 +30,8 @@ public class Client
         cli = new TcpClient();
         try
         {
-            cli.Connect("smashdome3d.hopto.org", 44444);
-            //cli.Connect("localhost", 44444);
+            //cli.Connect("smashdome3d.hopto.org", 44444);
+            cli.Connect("localhost", 44444);
         }
         catch (Exception e)
         {
