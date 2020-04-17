@@ -18,7 +18,14 @@ public class ButtonHit : MonoBehaviour
         Debug.Log("HIT");
         if(collision.gameObject.tag == "Bullet")
         {
-            control.NextScene();
+            if (scene == "Game")
+            {
+                control.NextScene();
+            }
+            if(scene == "Quit")
+            {
+                control.QuitGame();
+            }
         }
     }
 }
