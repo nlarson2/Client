@@ -10,20 +10,28 @@ public class Shoot : MonoBehaviour
     public GameObject start;
     public GameObject direction;
     public Transform gun;
+    public GameObject grenade;
     public bool hasGravity = true;
     public float fireRate = 0.2f; // Was 0.5f, seemed too slow.
+    public float throwRate = 0.5f;
     float curtime = 0.0f;
+    float nadeTime = 0.0f;
     bool mousedown = false;
+    bool grenadeThrown = false;
     // Update is called once per frame
     void Update()
     {
+
         if(netManager == null)
         {
             netManager = NetworkManager.Instance;
             return;
         }
         curtime += Time.deltaTime;
-        if(Input.GetMouseButtonDown(0))
+        nadeTime += Time.deltaTime;
+
+        // IF left mouse click pressed -> shoot 
+        if (Input.GetMouseButtonDown(0))
         {
             mousedown = true;
         }
@@ -31,30 +39,44 @@ public class Shoot : MonoBehaviour
         {
             mousedown = false;
         }
+
+        //IF E key pressed -> Throw Grenade
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("G is pressed");
+            grenadeThrown = true;
+        }
+        if (Input.GetKeyUp(KeyCode.E))
+        {
+            Debug.Log("G is releasd");
+            grenadeThrown = false;
+        }
+
         if (mousedown && curtime > fireRate)
         {
-            /*Vector3 dir = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            GameObject bull = Instantiate(bullet, transform.localPosition + transform.forward, transform.rotation);
-            Rigidbody rig = bull.GetComponent<Rigidbody>();
-            rig.useGravity = false;
-            //rig.AddForce(Physics.gravity * (rig.mass * rig.mass));
-            //rig.AddForce((transform.forward + transform.up / 4) * 2.0f);
-            rig.AddForce(cam.forward);*/
+            
             ShootMsg shootmsg = new ShootMsg(netManager.id);
-
-            //shootmsg.position = start.transform.position;
-            //shootmsg.direction = direction.transform.position-shootmsg.position;
-            //shootmsg.rotation = gun.transform.rotation;
-
 
             shootmsg.position = Camera.main.transform.position + Camera.main.transform.forward / 2;
             shootmsg.rotation = Camera.main.transform.rotation;
             shootmsg.direction = Camera.main.transform.forward;
-            //shootmsg.direction = transform.rotation * Vector3.forward;
  
             netManager.SendMsg(shootmsg.GetBytes());
             curtime = 0;
         }
+
+        if (grenadeThrown && nadeTime > fireRate)
+        {
+            ShootMsg shootmsg = new ShootMsg(netManager.id);
+
+            shootmsg.position = Camera.main.transform.position + Camera.main.transform.forward / 2;
+            shootmsg.rotation = Camera.main.transform.rotation;
+            shootmsg.direction = Camera.main.transform.forward;
+
+            netManager.SendMsg(shootmsg.GetBytes());
+            nadeTime = 0;       // Reset nade throw timer
+        }
+
 
     }
 }
