@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.21174768, g: 0.60281706, b: 1.1241385, a: 1}
+  m_IndirectSpecularColor: {r: 0.21182594, g: 0.6028682, b: 1.1240026, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -232,8 +232,10 @@ MonoBehaviour:
   start: {fileID: 0}
   direction: {fileID: 0}
   gun: {fileID: 0}
+  grenade: {fileID: 0}
   hasGravity: 1
   fireRate: 0.5
+  throwRate: 0.5
 --- !u!1 &1184789483
 GameObject:
   m_ObjectHideFlags: 0
@@ -396,6 +398,9 @@ MonoBehaviour:
     type: 3}
   bulletPrefab: {fileID: 6940828250910360934, guid: 4c49c38fad551f843b63913640caa567,
     type: 3}
+  mat1: {fileID: 2100000, guid: 962edfda0823151419192eacb7c6c8d2, type: 2}
+  mat2: {fileID: 2100000, guid: bce7334b191a5c947b4aeec71f1f3db6, type: 2}
+  mat3: {fileID: 2100000, guid: c7c281e5a464f72429153cea519aa64f, type: 2}
 --- !u!1001 &1907125743
 PrefabInstance:
   m_ObjectHideFlags: 0

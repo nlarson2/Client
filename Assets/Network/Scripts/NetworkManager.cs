@@ -41,6 +41,7 @@ namespace SmashDomeNetwork
         public GameObject VRPlayer;
         public GameObject StructurePrefab;
         public GameObject bulletPrefab;
+        public Material mat1, mat2, mat3;
 
         float sendDelay = 0.03f;
         float curTime = 0;
@@ -129,14 +130,36 @@ namespace SmashDomeNetwork
                 else {
                     obj = Instantiate(StructurePrefab, structMsg.pos, Quaternion.identity);
                     structures.Add(structMsg.from, obj);
+                    //Material material = obj.GetComponent<Material>();
+                    
+                    switch(structMsg.textureType)
+                    {
+                        case 0:
+                            obj.GetComponent<MeshRenderer>().material = mat1;
+                            break;
+                        case 1:
+                            obj.GetComponent<MeshRenderer>().material = mat2;
+                            break;
+                        case 2:
+                            obj.GetComponent<MeshRenderer>().material = mat3;
+                            break;
+                    }
+
                 }
                 Mesh mesh = new Mesh();
                 obj.GetComponent<MeshFilter>().mesh = mesh;
                 mesh.Clear();
                 mesh.vertices = structMsg.Vertices;
                 mesh.triangles = structMsg.Triangles;
+                Vector2[] uvs = new Vector2[mesh.vertices.Length];
+                for (int i = 0; i < uvs.Length; i++)
+                {
+                    uvs[i] = new Vector2(mesh.vertices[i].x, mesh.vertices[i].z);
+                    uvs[i].Scale(obj.transform.localScale);
+                }
+                mesh.uv = uvs;
                 mesh.RecalculateNormals();
-                MeshCollider collider = this.GetComponent<MeshCollider>();
+                MeshCollider collider = obj.GetComponent<MeshCollider>();
                 collider.sharedMesh = mesh;
                 
                 
