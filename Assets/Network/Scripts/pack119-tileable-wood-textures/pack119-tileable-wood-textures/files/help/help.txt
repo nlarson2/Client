@@ -1,0 +1,7 @@
+Thank you for purchasing Tileable Wood Texture and Pattern Pack.
+
+To load the patterns:
+Open Adobe Photoshop. Choose Paint Bucket Tool from the tools palette. On the options panel change Foreground to Pattern. Open Pattern Picker and click on the triangle icon and choose Load Patterns from the list. On the dialog box browse your .pat file and click Load. Your patterns will appear on Pattern Picker.
+For more detailed explanation with images, look at the helpwithimages.jpg file.
+
+Enjoy!

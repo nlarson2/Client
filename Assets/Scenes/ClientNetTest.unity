@@ -31414,7 +31414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1401818061
 Transform:
   m_ObjectHideFlags: 0
@@ -31454,9 +31454,9 @@ MonoBehaviour:
     type: 3}
   bulletPrefab: {fileID: 6940828250910360934, guid: 4c49c38fad551f843b63913640caa567,
     type: 3}
-  mat1: {fileID: 2100000, guid: 962edfda0823151419192eacb7c6c8d2, type: 2}
-  mat2: {fileID: 2100000, guid: bce7334b191a5c947b4aeec71f1f3db6, type: 2}
-  mat3: {fileID: 2100000, guid: c7c281e5a464f72429153cea519aa64f, type: 2}
+  mat1: {fileID: 2100000, guid: fa02b2664824b584fb01ce1161be2eae, type: 2}
+  mat2: {fileID: 2100000, guid: cae8accaa37a0af47a73927d7ecebd60, type: 2}
+  mat3: {fileID: 2100000, guid: 007a620da0a7ca644b0e950f62f52a25, type: 2}
 --- !u!4 &1401853916 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000011050751358, guid: ef77372ba45b400439d547071a884266,
@@ -38341,6 +38341,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 1322144126141044, guid: ee58b044a94296f4b8b04a34dff2f933, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 65810972598955902, guid: ee58b044a94296f4b8b04a34dff2f933,
         type: 3}
       propertyPath: m_Size.y
@@ -38355,10 +38359,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Size.x
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1322144126141044, guid: ee58b044a94296f4b8b04a34dff2f933, type: 3}
-      propertyPath: m_Layer
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 65810972598955902, guid: ee58b044a94296f4b8b04a34dff2f933, type: 3}

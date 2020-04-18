@@ -338,7 +338,8 @@ namespace SmashDomeNetwork
 
             // UPDATE HERE
             // Took this from player message. I would think it'd need to be 16 because it's 4 floats, but the code in player rotation has 12 bytes. not sure why.
-            this.rotation = Quaternion.Euler(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//16 bytes (4 floats)
+            // It's 3 floats because of Euler angles.
+            this.rotation = Quaternion.Euler(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
 
         }
         public byte[] GetBytes()

@@ -33,7 +33,18 @@ public class Shoot : MonoBehaviour
         // IF left mouse click pressed -> shoot 
         if (Input.GetMouseButtonDown(0))
         {
-            mousedown = true;
+            if (curtime > fireRate)
+            {
+
+                ShootMsg shootmsg = new ShootMsg(netManager.id);
+
+                shootmsg.position = Camera.main.transform.position + Camera.main.transform.forward / 2;
+                shootmsg.rotation = Camera.main.transform.rotation;
+                shootmsg.direction = Camera.main.transform.forward;
+
+                netManager.SendMsg(shootmsg.GetBytes());
+                curtime = 0;
+            }
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -52,18 +63,7 @@ public class Shoot : MonoBehaviour
             grenadeThrown = false;
         }
 
-        if (mousedown && curtime > fireRate)
-        {
-            
-            ShootMsg shootmsg = new ShootMsg(netManager.id);
-
-            shootmsg.position = Camera.main.transform.position + Camera.main.transform.forward / 2;
-            shootmsg.rotation = Camera.main.transform.rotation;
-            shootmsg.direction = Camera.main.transform.forward;
- 
-            netManager.SendMsg(shootmsg.GetBytes());
-            curtime = 0;
-        }
+        
 
         if (grenadeThrown && nadeTime > fireRate)
         {
