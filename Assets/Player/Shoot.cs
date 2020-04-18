@@ -9,7 +9,7 @@ public class Shoot : MonoBehaviour
     NetworkManager netManager;
     public GameObject start;
     public GameObject direction;
-    public GameObject gun;
+    public Transform gun;
     public bool hasGravity = true;
     public float fireRate = 0.2f; // Was 0.5f, seemed too slow.
     float curtime = 0.0f;
@@ -41,9 +41,15 @@ public class Shoot : MonoBehaviour
             //rig.AddForce((transform.forward + transform.up / 4) * 2.0f);
             rig.AddForce(cam.forward);*/
             ShootMsg shootmsg = new ShootMsg(netManager.id);
-            shootmsg.position = start.transform.position;
-            shootmsg.direction = direction.transform.position-shootmsg.position;
-            shootmsg.rotation = gun.transform.rotation;
+
+            //shootmsg.position = start.transform.position;
+            //shootmsg.direction = direction.transform.position-shootmsg.position;
+            //shootmsg.rotation = gun.transform.rotation;
+
+
+            shootmsg.position = Camera.main.transform.position + Camera.main.transform.forward / 2;
+            shootmsg.rotation = Camera.main.transform.rotation;
+            shootmsg.direction = Camera.main.transform.forward;
             //shootmsg.direction = transform.rotation * Vector3.forward;
  
             netManager.SendMsg(shootmsg.GetBytes());
