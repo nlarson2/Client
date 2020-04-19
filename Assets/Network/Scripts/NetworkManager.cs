@@ -44,7 +44,7 @@ namespace SmashDomeNetwork
         public GameObject StructurePrefab;
         public GameObject bulletPrefab;
         public Material mat1, mat2, mat3;
-
+        Control controller;
 
         public GameObject BrandonH;
         public GameObject BrandonB;
@@ -86,7 +86,8 @@ namespace SmashDomeNetwork
 
         private void Start()
         {
-            localPlayerScript = localPlayer.GetComponent<LocalPlayer>();
+            controller = GameObject.Find("Controller").GetComponent<Control>();
+            //localPlayerScript = localPlayer.GetComponent<LocalPlayer>();
             print("TEST");
             Instance = this;
             msgThread = new Thread(ReceiveMessages);
@@ -236,8 +237,8 @@ namespace SmashDomeNetwork
                     Debug.Log("login");
                     LoginMsg login = new LoginMsg(bytes);
                     id = login.from;
-                    login.playerType = this.localPlayerScript.playerType;
-                    login.personType = this.localPlayerScript.personType;
+                    login.playerType = controller.playerType;
+                    login.personType = controller.personType;
                     Debug.Log(string.Format("PERSON: {0}", login.personType == 1 ? "worked" : "didn't work"));
                     Login(bytes);
                     break;
