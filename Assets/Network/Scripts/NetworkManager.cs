@@ -29,7 +29,8 @@ namespace SmashDomeNetwork
 
         Client client;
 
-        public LocalPlayer localPlayer;
+        public GameObject localPlayer;
+        private LocalPlayer localPlayerScript;
         Dictionary<int, PlayerData> players = new Dictionary<int, PlayerData>();
         Queue<int> addPlayerQ = new Queue<int>();
         Queue<int> destroyQ = new Queue<int>();
@@ -38,7 +39,7 @@ namespace SmashDomeNetwork
         Queue<ShootMsg> bulletQ = new Queue<ShootMsg>();
 
         public GameObject playerPrefab;
-        public GameObject PCPlayer;
+        //public GameObject PCPlayer;
         public GameObject VRPlayer;
         public GameObject StructurePrefab;
         public GameObject bulletPrefab;
@@ -85,6 +86,7 @@ namespace SmashDomeNetwork
 
         private void Start()
         {
+            localPlayerScript = localPlayer.GetComponent<LocalPlayer>();
             print("TEST");
             Instance = this;
             msgThread = new Thread(ReceiveMessages);
@@ -101,11 +103,12 @@ namespace SmashDomeNetwork
                 {
                     if (playerType == 2)
                     {
+                        Debug.Log("INSTANTIATING VRPLAYER");
                         player.obj = Instantiate(VRPlayer, GetComponentInChildren<Transform>());
                     }
                     else
                     {
-                        GameObject playerObj = PCPlayer;
+                        GameObject playerObj = BrandonB;
                         switch (player.personType)
                         {
                             case 1:
@@ -121,7 +124,7 @@ namespace SmashDomeNetwork
                                 break;
                         }
                  
-                        player.obj = Instantiate(PCPlayer, GetComponentInChildren<Transform>());
+                        player.obj = Instantiate(playerObj, GetComponentInChildren<Transform>());
                     }
 
                     player.playerControl = player.obj.GetComponent<Player>();
@@ -233,8 +236,9 @@ namespace SmashDomeNetwork
                     Debug.Log("login");
                     LoginMsg login = new LoginMsg(bytes);
                     id = login.from;
-                    login.playerType = this.localPlayer.playerType;
-                    login.personType = this.localPlayer.personType;
+                    login.playerType = this.localPlayerScript.playerType;
+                    login.personType = this.localPlayerScript.personType;
+                    Debug.Log(string.Format("PERSON: {0}", login.personType == 1 ? "worked" : "didn't work"));
                     Login(bytes);
                     break;
                 case MsgType.LOGOUT:
