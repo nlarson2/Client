@@ -39,7 +39,7 @@ public class LocalPlayer : MonoBehaviour
         if(networkManager == null)
         {
             networkManager = NetworkManager.Instance;
-            networkManager.localPlayer = this.gameObject;
+           // networkManager.localPlayer = this.gameObject;
           
             return;
         }

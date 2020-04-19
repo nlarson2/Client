@@ -12,6 +12,7 @@ public class Control : MonoBehaviour
 {
     public GameObject PC, Vive, Oculus;
     protected GameObject Player;
+    public int playerType;
     public int personType;
     public string detectedHeadset = "";
     public ActiveVRFamily activeVR;
@@ -32,6 +33,7 @@ public class Control : MonoBehaviour
             Debug.Log("VIVE");
             activeVR = ActiveVRFamily.Vive;
             Player = Vive;
+            playerType = 2;
             // Instantiate Vive Player
             // Instantiate(myPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         }
@@ -39,12 +41,14 @@ public class Control : MonoBehaviour
         {
             activeVR = ActiveVRFamily.Oculus;
             Player = Oculus;
+            playerType = 2;
             // Instantiate Oculus Player
         }
         else
         {
             Debug.Log("NONE");
             XRSettings.enabled = false;
+            playerType = 1;
             activeVR = ActiveVRFamily.None;
             Player = PC;
             switch (this.personType)
