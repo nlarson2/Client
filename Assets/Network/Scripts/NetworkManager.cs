@@ -102,7 +102,7 @@ namespace SmashDomeNetwork
                 PlayerData player = players[playerID];
                 if (player.id != this.id)
                 {
-                    if (playerType == 2)
+                    if (player.playerType == 2)
                     {
                         Debug.Log(string.Format("PersonType: {0}", player.personType));
                         Debug.Log("INSTANTIATING VRPLAYER");
