@@ -1071,8 +1071,6 @@ MonoBehaviour:
   localPlayer: {fileID: 0}
   playerPrefab: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
     type: 3}
-  PCPlayer: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
-    type: 3}
   VRPlayer: {fileID: 6488846320004811125, guid: 8a68008d5728cf34193cb327fa6ec6d6,
     type: 3}
   StructurePrefab: {fileID: 7368568842321067293, guid: 531473b8e4c0fbe41a350e0e245737d6,
@@ -13621,14 +13619,15 @@ MonoBehaviour:
   PC: {fileID: 3933733783132801415, guid: 498ce68c787f40248b49d833c22ece45, type: 3}
   Vive: {fileID: 107946, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
   Oculus: {fileID: 5294844403146441747, guid: b76a0f59a764810458e4b09e603eef58, type: 3}
-  personType: 2
+  playerType: 0
+  personType: 3
   detectedHeadset: 
   activeVR: 0
   BrandonH: {fileID: 7174502305036006938, guid: 69f99039b4ea5e540bf53b410ebe478c,
     type: 3}
   BrandonB: {fileID: 8519351918791755020, guid: b7f200f322626f548a8c068ba5453b32,
     type: 3}
-  DOMINANT: {fileID: 3933733783132801415, guid: 498ce68c787f40248b49d833c22ece45,
+  DOMINANT: {fileID: 7261442278735761019, guid: c38d09cfc895f9a4296dd9f343d901ec,
     type: 3}
 --- !u!4 &1668290009
 Transform:
