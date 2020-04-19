@@ -24,6 +24,7 @@ public class LocalPlayer : MonoBehaviour
     public Quaternion PrevLHandRot;
     public Quaternion PrevRHandRot;
     public int playerType;
+    public int personType = 0;
 
     public Transform camera;
     public GameObject lHand;
@@ -38,6 +39,8 @@ public class LocalPlayer : MonoBehaviour
         if(networkManager == null)
         {
             networkManager = NetworkManager.Instance;
+            networkManager.localPlayer = this;
+          
             return;
         }
         //track time to only send messages at certain intervals

@@ -12,8 +12,13 @@ public class Control : MonoBehaviour
 {
     public GameObject PC, Vive, Oculus;
     protected GameObject Player;
+    public int personType;
     public string detectedHeadset = "";
     public ActiveVRFamily activeVR;
+
+    public GameObject BrandonH;
+    public GameObject BrandonB;
+    public GameObject DOMINANT;
 
     private void Awake()
     {
@@ -41,7 +46,21 @@ public class Control : MonoBehaviour
             Debug.Log("NONE");
             XRSettings.enabled = false;
             activeVR = ActiveVRFamily.None;
-            Player = PC; 
+            Player = PC;
+            switch (this.personType)
+            {
+                case 1:
+                    Player = BrandonH;
+                    break;
+                case 2:
+                    Player = BrandonB;
+                    break;
+                case 3:
+                    Player = DOMINANT;
+                    break;
+                default:
+                    break;
+            }
             // Instantiate FPS Player
         }
 

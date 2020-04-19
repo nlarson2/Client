@@ -172,6 +172,7 @@ namespace SmashDomeNetwork
     public class LoginMsg : Message
     {
         //constructor
+        public int personType;
         public LoginMsg(int from, int playerType = 0)
         {
             this.msgNum = seq++;
@@ -188,11 +189,13 @@ namespace SmashDomeNetwork
             this.to = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
             this.from = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
             this.playerType = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
+            this.personType = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
         }
         public byte[] GetBytes()
         {
             byte[] msg = Base();
             msg = Join(msg, IntToBytes(playerType));
+            msg = Join(msg, IntToBytes(personType));
             msg = FinishMsg(msg);
             return msg;
         }
@@ -453,7 +456,8 @@ namespace SmashDomeNetwork
 
     public class AddPlayerMsg : Message
     {
-        public AddPlayerMsg(int from, int playerType)
+        public int personType;
+        public AddPlayerMsg(int from, int playerType, int personType)
         {
             this.msgNum = seq++;
             //reset if it gets too high
@@ -461,6 +465,7 @@ namespace SmashDomeNetwork
             this.msgType = 8;
             this.from = from;
             this.playerType = playerType;
+            this.personType = personType;
         }
         public AddPlayerMsg(byte[] bytes)
         {
@@ -469,12 +474,14 @@ namespace SmashDomeNetwork
             this.to = BytesToInt(GetSegment(index, 4, bytes)); index += 4;//4 bytes in int
             this.from = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
             this.playerType = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
+            this.personType = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
 
         }
         public byte[] GetBytes()
         {
             byte[] msg = Base();
             msg = Join(msg, IntToBytes(this.playerType));
+            msg = Join(msg, IntToBytes(this.personType));
             msg = FinishMsg(msg);
             return msg;
         }

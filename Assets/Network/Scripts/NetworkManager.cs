@@ -21,6 +21,7 @@ namespace SmashDomeNetwork
             public GameObject obj;
             public Player playerControl;
             public int playerType;
+            public int personType;
         };
 
         public int id = 0;
@@ -28,7 +29,7 @@ namespace SmashDomeNetwork
 
         Client client;
 
-        public GameObject localPlayer;
+        public LocalPlayer localPlayer;
         Dictionary<int, PlayerData> players = new Dictionary<int, PlayerData>();
         Queue<int> addPlayerQ = new Queue<int>();
         Queue<int> destroyQ = new Queue<int>();
@@ -42,6 +43,12 @@ namespace SmashDomeNetwork
         public GameObject StructurePrefab;
         public GameObject bulletPrefab;
         public Material mat1, mat2, mat3;
+
+
+        public GameObject BrandonH;
+        public GameObject BrandonB;
+        public GameObject DOMINANT;
+        
 
         float sendDelay = 0.03f;
         float curTime = 0;
@@ -91,11 +98,31 @@ namespace SmashDomeNetwork
                 int playerID = addPlayerQ.Dequeue();
                 PlayerData player = players[playerID];
                 if (player.id != this.id)
-                {   
-                    if(playerType == 2)
+                {
+                    if (playerType == 2)
+                    {
                         player.obj = Instantiate(VRPlayer, GetComponentInChildren<Transform>());
+                    }
                     else
+                    {
+                        GameObject playerObj = PCPlayer;
+                        switch (player.personType)
+                        {
+                            case 1:
+                                playerObj = BrandonH;
+                                break;
+                            case 2:
+                                playerObj = BrandonB;
+                                break;
+                            case 3:
+                                playerObj = DOMINANT;
+                                break;
+                            default:
+                                break;
+                        }
+                 
                         player.obj = Instantiate(PCPlayer, GetComponentInChildren<Transform>());
+                    }
 
                     player.playerControl = player.obj.GetComponent<Player>();
                     player.obj.name = "NetworkPlayer:" + player.id;
@@ -206,7 +233,8 @@ namespace SmashDomeNetwork
                     Debug.Log("login");
                     LoginMsg login = new LoginMsg(bytes);
                     id = login.from;
-                    login.playerType = this.playerType;
+                    login.playerType = this.localPlayer.playerType;
+                    login.personType = this.localPlayer.personType;
                     Login(bytes);
                     break;
                 case MsgType.LOGOUT:
@@ -298,6 +326,7 @@ namespace SmashDomeNetwork
                 PlayerData player = new PlayerData();
                 player.id = msg.from;
                 player.playerType = msg.playerType;
+                player.personType = msg.personType;
                 //player.type = msg.msgType;
                 addPlayerQ.Enqueue(player.id);
                 players.Add(player.id, player);
