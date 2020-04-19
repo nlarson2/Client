@@ -24,6 +24,7 @@ namespace SmashDomeNetwork
 
         //protected DateTime time = DateTime.Now;
         public static int seq = 1;
+        public static int snapSeq = 1;
         //default to 0 to avoid errors
         public int msgNum = 0;
         public int msgType = 0;
@@ -355,13 +356,59 @@ namespace SmashDomeNetwork
     }
     public class SnapshotMsg : Message
     {
+        public int numId;
         public List<int> userId = new List<int>();
         public List<Vector3> positions = new List<Vector3>();
         public List<Quaternion> rotation = new List<Quaternion>();
         public List<Quaternion> camRotation = new List<Quaternion>();
+        public List<Vector3> linear_speed = new List<Vector3>();
+        public List<Vector3> angular_speed = new List<Vector3>();
+
         public SnapshotMsg()
         {
+            this.msgNum = snapSeq++;
+            if (snapSeq > 2000000000) { snapSeq = 1; }
             this.msgType = 6;
+            this.from = 0;
+        }
+
+        public SnapshotMsg(byte[] bytes)
+        {
+            int index = 8;
+            this.to = BytesToInt(GetSegment(index, 4, bytes)); index += 4;//4 bytes in int
+            this.from = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
+
+            numId = BytesToInt(GetSegment(index, 4, bytes)); index += 4; //retrieves size of list
+
+            for (int i = 0; i < numId; i++)
+            {
+                userId.Add(BytesToInt(GetSegment(index, 4, bytes))); index += 4;
+                positions.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
+                rotation.Add(BytesToQuaternion(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
+                camRotation.Add(BytesToQuaternion(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)                
+                linear_speed.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
+                angular_speed.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
+
+
+            }
+        }
+
+        public byte[] GetBytes()
+        {
+            byte[] msg = Base();
+            msg = Join(msg, IntToBytes(userId.Count));
+            for (int i = 0; i < userId.Count; i++)
+            {
+                msg = Join(msg, IntToBytes(userId[i]));
+                msg = Join(msg, Vec3ToBytes(positions[i]));
+                msg = Join(msg, QuaternionToBytes(rotation[i]));
+                msg = Join(msg, QuaternionToBytes(camRotation[i]));
+                msg = Join(msg, Vec3ToBytes(linear_speed[i]));
+                msg = Join(msg, Vec3ToBytes(angular_speed[i]));
+
+            }
+            msg = FinishMsg(msg);
+            return msg;
         }
 
     }
@@ -477,5 +524,51 @@ namespace SmashDomeNetwork
             msg = FinishMsg(msg);
             return msg;
         }
+    }
+    public class NetObjectMsg : Message
+    {
+        public int numId;
+        public List<int> objID = new List<int>();
+        public List<Vector3> positions = new List<Vector3>();
+        public List<Quaternion> rotation = new List<Quaternion>();
+
+        public NetObjectMsg(int objID)
+        {
+            this.msgNum = seq++;
+            if (seq > 2000000000) { seq = 1; }
+            this.msgType = 9;
+            this.from = objID; //object ID
+        }
+
+        public NetObjectMsg(byte[] bytes)
+        {
+            int index = 8;
+            this.to = BytesToInt(GetSegment(index, 4, bytes)); index += 4;//4 bytes in int
+            this.from = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
+
+            this.numId = BytesToInt(GetSegment(index, 4, bytes)); index += 4; //retrieves size of list
+
+            for (int i = 0; i < numId; i++)
+            {
+                objID.Add(BytesToInt(GetSegment(index, 4, bytes))); index += 4;
+                positions.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
+                rotation.Add(BytesToQuaternion(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
+            }
+        }
+
+        public byte[] GetBytes()
+        {
+            byte[] msg = Base();
+            msg = Join(msg, IntToBytes(objID.Count));
+            for (int i = 0; i < objID.Count; i++)
+            {
+                msg = Join(msg, IntToBytes(objID[i]));
+                msg = Join(msg, Vec3ToBytes(positions[i]));
+                msg = Join(msg, QuaternionToBytes(rotation[i]));
+            }
+            msg = FinishMsg(msg);
+            return msg;
+        }
+        
     }
 }

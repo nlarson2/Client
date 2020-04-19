@@ -310,21 +310,25 @@ namespace SmashDomeNetwork
             bulletQ.Enqueue(msg);
 
         }
-        public void ProcessSnapshot(string json)
+        public void ProcessSnapshot(byte[] _snapshot)
         {
-            SnapshotMsg snapshot = JsonUtility.FromJson<SnapshotMsg>(json);
+            SnapshotMsg snapshot = new SnapshotMsg(_snapshot);
             Debug.Log(snapshot.userId.Count);
-            for(int i = 0; i < snapshot.userId.Count; i++)
+            for (int i = 0; i < snapshot.userId.Count; i++)
             {
                 try
                 {
-                    if (snapshot.userId[i] == this.id) continue;
+                    int uid = snapshot.userId[i];
+                    if (uid == this.id) continue;
+                    PlayerData player = players[uid];
 
-                    int playerID = snapshot.userId[i];
-                    Player player = players[playerID].obj.GetComponent<Player>();
-                    player.position = snapshot.positions[i];
-                    player.rotation = snapshot.rotation[i];
-                    player.cameraRotation = snapshot.camRotation[i];
+                    player.playerControl.position = snapshot.positions[i];
+                    player.playerControl.rotation = snapshot.rotation[i];
+                    player.playerControl.cameraRotation = snapshot.camRotation[i];
+                    //player.playerControl.linear_speed = snapshot.linear_speed[i];
+                    //player.playerControl.angular_speed = snapshot.angular_speed[i];
+
+                    players[uid] = player;
                 }
                 catch (Exception e)
                 {
