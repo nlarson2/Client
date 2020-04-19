@@ -13628,7 +13628,8 @@ MonoBehaviour:
     type: 3}
   BrandonB: {fileID: 8519351918791755020, guid: b7f200f322626f548a8c068ba5453b32,
     type: 3}
-  DOMINANT: {fileID: 0}
+  DOMINANT: {fileID: 3933733783132801415, guid: 498ce68c787f40248b49d833c22ece45,
+    type: 3}
 --- !u!4 &1668290009
 Transform:
   m_ObjectHideFlags: 0

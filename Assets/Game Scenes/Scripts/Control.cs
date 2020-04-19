@@ -65,6 +65,7 @@ public class Control : MonoBehaviour
         }
 
         Player = Instantiate(Player, this.gameObject.transform);
+        Player.GetComponent<LocalPlayer>().personType = this.personType;
         DontDestroyOnLoad(this.gameObject);
         DontDestroyOnLoad(Player);
     }
