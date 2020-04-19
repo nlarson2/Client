@@ -30,7 +30,7 @@ public class Control : MonoBehaviour
         if(detectedHeadset.ToLower().Contains("vive"))
         {
             //XRSettings.enable = true;
-            Debug.Log("VIVE");
+            //Debug.Log("VIVE");
             activeVR = ActiveVRFamily.Vive;
             Player = Vive;
             playerType = 2;
@@ -46,7 +46,7 @@ public class Control : MonoBehaviour
         }
         else
         {
-            Debug.Log("NONE");
+            //Debug.Log("NONE");
             XRSettings.enabled = false;
             playerType = 1;
             activeVR = ActiveVRFamily.None;
@@ -80,7 +80,7 @@ public class Control : MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("Attempting Quit");
+        //Debug.Log("Attempting Quit");
 #if UNITY_EDITOR
         // Application.Quit() does not work in the editor so
         // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
