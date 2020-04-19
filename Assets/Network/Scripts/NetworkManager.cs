@@ -336,6 +336,7 @@ namespace SmashDomeNetwork
                 player.id = msg.from;
                 player.playerType = msg.playerType;
                 player.personType = msg.personType;
+                Debug.Log(string.Format("Player:  {0}   Person:{1}", player.playerType, player.personType));
                 //player.type = msg.msgType;
                 addPlayerQ.Enqueue(player.id);
                 players.Add(player.id, player);

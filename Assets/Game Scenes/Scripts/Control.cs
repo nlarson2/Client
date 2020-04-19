@@ -46,7 +46,7 @@ public class Control : MonoBehaviour
         }
         else
         {
-            //Debug.Log("NONE");
+            Debug.Log("NONE");
             XRSettings.enabled = false;
             playerType = 1;
             activeVR = ActiveVRFamily.None;
