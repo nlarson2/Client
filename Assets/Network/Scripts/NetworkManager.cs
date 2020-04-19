@@ -104,6 +104,7 @@ namespace SmashDomeNetwork
                 {
                     if (playerType == 2)
                     {
+                        Debug.Log(string.Format("PersonType: {0}", player.personType));
                         Debug.Log("INSTANTIATING VRPLAYER");
                         player.obj = Instantiate(VRPlayer, GetComponentInChildren<Transform>());
                     }
@@ -113,6 +114,7 @@ namespace SmashDomeNetwork
                         switch (player.personType)
                         {
                             case 1:
+                                Debug.Log("CHANGED TO BRANDON H");
                                 playerObj = BrandonH;
                                 break;
                             case 2:
@@ -122,6 +124,7 @@ namespace SmashDomeNetwork
                                 playerObj = DOMINANT;
                                 break;
                             default:
+                                Debug.Log("DEFAULTING");
                                 break;
                         }
                  
@@ -144,7 +147,7 @@ namespace SmashDomeNetwork
             while (destroyQ.Count > 0)
             {
                 int destroyPlayer = destroyQ.Dequeue();
-                Debug.Log(destroyPlayer);
+                //Debug.Log(destroyPlayer);
                 Destroy(this.players[destroyPlayer].obj);
                 players.Remove(destroyPlayer);
             }
@@ -155,7 +158,7 @@ namespace SmashDomeNetwork
                 GameObject obj;
                 if (structures.ContainsKey(structMsg.from))
                 {
-                    Debug.Log("ALREADY EXISTS");
+                    //Debug.Log("ALREADY EXISTS");
                     obj = structures[structMsg.from];
                 }
                 else {
@@ -229,57 +232,58 @@ namespace SmashDomeNetwork
             /*Message msg;
             msg = JsonUtility.FromJson<Message>(json);*/
             int msgType = Message.BytesToInt(Message.GetSegment(4, 4, bytes));
-            //Debug.Log(json);
+            ////Debug.Log(json);
             //translate the messages type and call appropriate fucntion
             switch ((MsgType)msgType)
             {
                 case MsgType.LOGIN:
-                    Debug.Log("login");
+                    //Debug.Log("login");
                     LoginMsg login = new LoginMsg(bytes);
                     id = login.from;
                     login.playerType = controller.playerType;
                     login.personType = controller.personType;
-                    Debug.Log(string.Format("PERSON: {0}", login.personType == 1 ? "worked" : "didn't work"));
-                    Login(bytes);
+                    Debug.Log(string.Format("PERSON: {0}", id));
+                    Login(login.GetBytes());
                     break;
                 case MsgType.LOGOUT:
                     LogoutMsg logout = new LogoutMsg(bytes);
-                    Debug.Log("RemovePlayer");
+                    //Debug.Log("RemovePlayer");
                     RemovePlayer(logout);
                     break;
                 case MsgType.MOVE:
                     //MoveMsg move = new MoveMsg(bytes);
-                    Debug.Log("Move");
+                    //Debug.Log("Move");
                     Move(bytes);
                     break;
                 case MsgType.MOVEVR:
                     //MoveMsg move = new MoveMsg(bytes);
-                    Debug.Log("MoveVR");
+                    //Debug.Log("MoveVR");
                     MoveVR(bytes);
                     break;
                 case MsgType.SHOOT:
                     Shoot(bytes);
                     break;
                 case MsgType.ADDPLAYER:
-                    Debug.Log("AddPlayer");
+                    //Debug.Log("AddPlayer");
                     AddPlayer(bytes);
                     break;/*
                 case MsgType.SNAPSHOT:
                     ProcessSnapshot(bytes);
-                    Debug.Log("SnapShot");
+                    //Debug.Log("SnapShot");
                     break;*/
                 case MsgType.STRUCTURE:
                     AddStructure(bytes);
-                    Debug.Log("Structure");
+                    //Debug.Log("Structure");
                     break;
 
             }
         }
 
         public void Login(byte[] msg)
-        { 
+        {
             /*LoginMsg outgoing = new LoginMsg(id);
             outgoing.from = id;*/
+            Debug.Log("LOGIN SENT");
             client.SendMsg(msg);
         }
 
@@ -289,7 +293,7 @@ namespace SmashDomeNetwork
             MoveMsg msg = new MoveMsg(move);
             try
             {
-                //Debug.Log(json);
+                ////Debug.Log(json);
                 Player player = players[msg.from].playerControl;
                 player.position = msg.pos;
                 player.rotation = msg.playerRotation;
@@ -307,7 +311,7 @@ namespace SmashDomeNetwork
             MoveVRMsg msg = new MoveVRMsg(move);
             try
             {
-                //Debug.Log(json);
+                ////Debug.Log(json);
                 Player player = players[msg.from].playerControl;
                 player.position = msg.pos;
                 player.rotation = msg.playerRotation;
@@ -347,7 +351,7 @@ namespace SmashDomeNetwork
         public void ProcessSnapshot(string json)
         {
             SnapshotMsg snapshot = JsonUtility.FromJson<SnapshotMsg>(json);
-            Debug.Log(snapshot.userId.Count);
+            //Debug.Log(snapshot.userId.Count);
             for(int i = 0; i < snapshot.userId.Count; i++)
             {
                 try

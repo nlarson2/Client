@@ -1690,7 +1690,7 @@ MonoBehaviour:
   PrevRHandRot: {x: 0, y: 0, z: 0, w: 0}
   playerType: 1
   personType: 0
-  camera: {fileID: 8519351918687442710}
+  cam: {fileID: 8519351918687442707}
   lHand: {fileID: 0}
   rHand: {fileID: 0}
 --- !u!114 &8519351918791755023

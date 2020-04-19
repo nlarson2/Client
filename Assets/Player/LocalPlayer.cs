@@ -24,9 +24,9 @@ public class LocalPlayer : MonoBehaviour
     public Quaternion PrevLHandRot;
     public Quaternion PrevRHandRot;
     public int playerType;
-    public int personType = 0;
+    public int personType;
 
-    public Transform camera;
+    public Camera cam;
     public GameObject lHand;
     public GameObject rHand;
 
@@ -58,7 +58,7 @@ public class LocalPlayer : MonoBehaviour
                 MoveMsg movementMsg = new MoveMsg(networkManager.id);
                 movementMsg.pos = transform.position;
                 movementMsg.playerRotation = transform.rotation;
-                movementMsg.cameraRotation = camera.transform.rotation;
+                movementMsg.cameraRotation = cam.transform.rotation;
 
                 networkManager.SendMsg(movementMsg.GetBytes());
 
@@ -68,7 +68,7 @@ public class LocalPlayer : MonoBehaviour
                 MoveVRMsg movementMsg = new MoveVRMsg(networkManager.id);
                 movementMsg.pos = transform.position;
                 movementMsg.playerRotation = transform.rotation;
-                movementMsg.cameraRotation = camera.transform.rotation;
+                movementMsg.cameraRotation = cam.transform.rotation;
                 movementMsg.lHandPosition = lHand.transform.localPosition;
                 movementMsg.rHandPosition = rHand.transform.localPosition;
                 movementMsg.lHandRotation = lHand.transform.localRotation;
@@ -81,7 +81,7 @@ public class LocalPlayer : MonoBehaviour
 
         //update previous information
         PrevPosition = transform.position;
-        PrevRotate.x = camera.rotation.x;
+        PrevRotate.x = cam.transform.rotation.x;
         PrevRotate.y = transform.rotation.y;
     }
 

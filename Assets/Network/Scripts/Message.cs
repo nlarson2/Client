@@ -172,7 +172,7 @@ namespace SmashDomeNetwork
     public class LoginMsg : Message
     {
         //constructor
-        public int personType;
+        public int personType = 0;
         public LoginMsg(int from, int playerType = 0)
         {
             this.msgNum = seq++;
@@ -185,6 +185,7 @@ namespace SmashDomeNetwork
         public LoginMsg(byte[] bytes)
         {
             //start at 8 for all because first 8 are seq num and msgtype
+            this.msgType = 1;
             int index = 8;
             this.to = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
             this.from = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
