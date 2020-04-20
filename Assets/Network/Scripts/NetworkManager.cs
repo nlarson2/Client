@@ -34,7 +34,9 @@ namespace SmashDomeNetwork
         Queue<int> destroyQ = new Queue<int>();
         Queue<StructureChangeMsg> addStructQ = new Queue<StructureChangeMsg>();
         Dictionary<int, GameObject> structures = new Dictionary<int, GameObject>();
+        //Dictionary<int, GameObject> netobjects = new Dictionary<int, GameObject>();
         Dictionary<int, Snapshot> netobjects = new Dictionary<int, Snapshot>();
+        Queue<NetObjectMsg> netInstantiate = new Queue<NetObjectMsg>();
         Queue<ShootMsg> bulletQ = new Queue<ShootMsg>();
 
         public GameObject playerPrefab;
@@ -42,6 +44,7 @@ namespace SmashDomeNetwork
         public GameObject VRPlayer;
         public GameObject StructurePrefab;
         public GameObject bulletPrefab;
+        public GameObject netCubePrefab;
         public Material mat1, mat2, mat3;
 
         float sendDelay = 0.03f;
@@ -75,7 +78,7 @@ namespace SmashDomeNetwork
 
             }
 
-        }  
+        }
 
         private void Start()
         {
@@ -84,7 +87,7 @@ namespace SmashDomeNetwork
             msgThread = new Thread(ReceiveMessages);
             msgThread.Start();
         }
-       
+
         private void Update()
         {
             while (addPlayerQ.Count > 0)
@@ -92,8 +95,8 @@ namespace SmashDomeNetwork
                 int playerID = addPlayerQ.Dequeue();
                 PlayerData player = players[playerID];
                 if (player.id != this.id)
-                {   
-                    if(playerType == 2)
+                {
+                    if (playerType == 2)
                         player.obj = Instantiate(VRPlayer, GetComponentInChildren<Transform>());
                     else
                         player.obj = Instantiate(PCPlayer, GetComponentInChildren<Transform>());
@@ -102,7 +105,7 @@ namespace SmashDomeNetwork
                     player.obj.name = "NetworkPlayer:" + player.id;
                     players.Remove(playerID);
                     players.Add(playerID, player);
-                    
+
                 }
                 else
                 {
@@ -128,12 +131,13 @@ namespace SmashDomeNetwork
                     Debug.Log("ALREADY EXISTS");
                     obj = structures[structMsg.from];
                 }
-                else {
+                else
+                {
                     obj = Instantiate(StructurePrefab, structMsg.pos, Quaternion.identity);
                     structures.Add(structMsg.from, obj);
                     //Material material = obj.GetComponent<Material>();
-                    
-                    switch(structMsg.textureType)
+
+                    switch (structMsg.textureType)
                     {
                         case 0:
                             obj.GetComponent<MeshRenderer>().material = mat1;
@@ -162,11 +166,11 @@ namespace SmashDomeNetwork
                 mesh.RecalculateNormals();
                 MeshCollider collider = obj.GetComponent<MeshCollider>();
                 collider.sharedMesh = mesh;
-                
-                
+
+
             }
 
-            while(bulletQ.Count > 0)
+            while (bulletQ.Count > 0)
             {
                 ShootMsg shoot = bulletQ.Dequeue();
                 //GameObject bull = Instantiate(bulletPrefab, shoot.position, transform.rotation);
@@ -175,6 +179,28 @@ namespace SmashDomeNetwork
                 //rig.AddForce(Physics.gravity * (rig.mass * rig.mass));
                 //rig.AddForce((transform.forward + transform.up / 4) * 2.0f);
                 //rig.AddForce(shoot.direction);
+            }
+
+            while(netInstantiate.Count > 0)
+            {
+                NetObjectMsg objs = netInstantiate.Dequeue();
+                for (int i = 0; i < objs.objID.Count; i++)
+                {
+            
+                    //does not exist, add new
+                    //Snapshot snap = new Snapshot();
+                    Debug.Log("HERE AT THE STUPID SPOT");
+                    GameObject netCube = Instantiate(netCubePrefab);
+                    Snapshot snap = netCube.GetComponent<Snapshot>();
+                    snap.objID = objs.objID[i];
+                    snap.scale = objs.localScale[i];
+                    snap.pos = objs.positions[i];
+                    snap.rot = objs.rotation[i];
+                        
+                    //netobjects.Add(snap.objID, snap.GetObject());
+                    netobjects.Add(snap.objID, snap);
+
+                }
             }
         }
 
@@ -195,7 +221,7 @@ namespace SmashDomeNetwork
 
         public void TranslateMsg(byte[] bytes)
         {
-            
+
             /*Message msg;
             msg = JsonUtility.FromJson<Message>(json);*/
             int msgType = Message.BytesToInt(Message.GetSegment(4, 4, bytes));
@@ -237,6 +263,7 @@ namespace SmashDomeNetwork
                     Debug.Log("SnapShot");
                     break;
                 case MsgType.NETOBJECT:
+                    Debug.Log("NETOBJECT");
                     NetObject(bytes);
                     break;
                 case MsgType.STRUCTURE:
@@ -248,7 +275,7 @@ namespace SmashDomeNetwork
         }
 
         public void Login(byte[] msg)
-        { 
+        {
             /*LoginMsg outgoing = new LoginMsg(id);
             outgoing.from = id;*/
             client.SendMsg(msg);
@@ -256,7 +283,7 @@ namespace SmashDomeNetwork
 
         public void Move(byte[] move)
         {
-            
+
             MoveMsg msg = new MoveMsg(move);
             try
             {
@@ -317,22 +344,19 @@ namespace SmashDomeNetwork
         public void ProcessSnapshot(byte[] _snapshot)
         {
             SnapshotMsg snapshot = new SnapshotMsg(_snapshot);
-            Debug.Log(snapshot.userId.Count);
-            for (int i = 0; i < snapshot.userId.Count; i++)
+            //Debug.Log(snapshot.userId.Count);
+            for (int i = 0; i < snapshot.objID.Count; i++)
             {
                 try
                 {
-                    int uid = snapshot.userId[i];
-                    if (uid == this.id) continue;
-                    PlayerData player = players[uid];
+                    Debug.Log(string.Format("Pos: {0}", snapshot.positions[i]));
+                    int id = snapshot.objID[i];
+                    Snapshot cube = netobjects[id];
 
-                    player.playerControl.position = snapshot.positions[i];
-                    player.playerControl.rotation = snapshot.rotation[i];
-                    player.playerControl.cameraRotation = snapshot.camRotation[i];
+                    cube.pos = snapshot.positions[i];
+                    cube.rot = snapshot.rotation[i];
                     //player.playerControl.linear_speed = snapshot.linear_speed[i];
                     //player.playerControl.angular_speed = snapshot.angular_speed[i];
-
-                    players[uid] = player;
                 }
                 catch (Exception e)
                 {
@@ -363,7 +387,7 @@ namespace SmashDomeNetwork
 
         public void SendMsg(byte[] msg)
         {
-            
+
             client.SendMsg(msg);
 
         }
@@ -379,24 +403,9 @@ namespace SmashDomeNetwork
         private void NetObject(byte[] msg)
         {
             NetObjectMsg objs = new NetObjectMsg(msg);
-            for (int i = 0; i < objs.objID.Count; i++)
-            {
-                if (netobjects[objs.objID[i]])
-                {
-                    //exists, update, should not reach here
-                }
-                else
-                {                    
-                    //does not exist, add new
-                    Snapshot snap = new Snapshot();
-
-                    snap.objID = objs.objID[i];
-                    snap.scale = objs.localScale[i];
-                    snap.pos = objs.positions[i];
-                    snap.rot = objs.rotation[i];
-                    netobjects.Add(snap.objID, snap);
-                }
-            }
+            Debug.Log(string.Format("ObjID.Count: {0}", objs.objID.Count));
+            netInstantiate.Enqueue(objs);
+            
         }
 
     }

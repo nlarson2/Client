@@ -23,7 +23,7 @@ namespace SmashDomeNetwork
         // Start is called before the first frame update
         void Start()
         {
-            this.obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //this.obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
             //this.obj = gameObject.transform.gameObject; //later will need dimensions specs
             this.scale = gameObject.transform.localScale;
             this.pos = gameObject.transform.position;
@@ -39,6 +39,7 @@ namespace SmashDomeNetwork
 
             if (pos != transform.position)
             {
+                Debug.Log("POS SHOULD CHANGE");
                 if (Vector3.Distance(pos, transform.position) > 10.0f)
                     transform.position = pos;
                 else
@@ -49,6 +50,11 @@ namespace SmashDomeNetwork
                 transform.eulerAngles = rot.eulerAngles;
                 transform.rotation = Quaternion.Slerp(transform.rotation, rot, 0.1f);
             }
+        }
+
+        public GameObject GetObject()
+        {
+            return this.gameObject;
         }
     }
 }

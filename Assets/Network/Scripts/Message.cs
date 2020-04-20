@@ -143,7 +143,7 @@ namespace SmashDomeNetwork
 
         public static Quaternion BytesToQuaternion(byte[] bytes)
         {
-            Debug.Log(Quaternion.Euler(BytesToVec3(bytes)));
+            //Debug.Log(Quaternion.Euler(BytesToVec3(bytes)));
             return Quaternion.Euler(BytesToVec3(bytes));
 
         }
@@ -359,12 +359,12 @@ namespace SmashDomeNetwork
     public class SnapshotMsg : Message
     {
         public int numId;
-        public List<int> userId = new List<int>();
+        public List<int> objID = new List<int>();
         public List<Vector3> positions = new List<Vector3>();
         public List<Quaternion> rotation = new List<Quaternion>();
         public List<Quaternion> camRotation = new List<Quaternion>();
         public List<Vector3> linear_speed = new List<Vector3>();
-        public List<Vector3> angular_speed = new List<Vector3>();
+        public List<Quaternion> angular_speed = new List<Quaternion>();
 
         public SnapshotMsg()
         {
@@ -384,12 +384,11 @@ namespace SmashDomeNetwork
 
             for (int i = 0; i < numId; i++)
             {
-                userId.Add(BytesToInt(GetSegment(index, 4, bytes))); index += 4;
+                objID.Add(BytesToInt(GetSegment(index, 4, bytes))); index += 4;
                 positions.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
-                rotation.Add(BytesToQuaternion(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
-                camRotation.Add(BytesToQuaternion(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)                
+                rotation.Add(BytesToQuaternion(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)            
                 linear_speed.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
-                angular_speed.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
+                angular_speed.Add(Quaternion.Euler(BytesToVec3(GetSegment(index, 12, bytes)))); index += 12;//12 bytes (4 floats)
 
 
             }
@@ -398,15 +397,14 @@ namespace SmashDomeNetwork
         public byte[] GetBytes()
         {
             byte[] msg = Base();
-            msg = Join(msg, IntToBytes(userId.Count));
-            for (int i = 0; i < userId.Count; i++)
+            msg = Join(msg, IntToBytes(objID.Count));
+            for (int i = 0; i < objID.Count; i++)
             {
-                msg = Join(msg, IntToBytes(userId[i]));
+                msg = Join(msg, IntToBytes(objID[i]));
                 msg = Join(msg, Vec3ToBytes(positions[i]));
                 msg = Join(msg, QuaternionToBytes(rotation[i]));
-                msg = Join(msg, QuaternionToBytes(camRotation[i]));
                 msg = Join(msg, Vec3ToBytes(linear_speed[i]));
-                msg = Join(msg, Vec3ToBytes(angular_speed[i]));
+                msg = Join(msg, QuaternionToBytes(angular_speed[i]));
 
             }
             msg = FinishMsg(msg);
@@ -575,6 +573,6 @@ namespace SmashDomeNetwork
             msg = FinishMsg(msg);
             return msg;
         }
-        
+
     }
 }
