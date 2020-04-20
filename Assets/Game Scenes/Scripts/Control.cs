@@ -17,6 +17,7 @@ public class Control : MonoBehaviour
     public string detectedHeadset = "";
     public ActiveVRFamily activeVR;
 
+    public GameObject Basic;
     public GameObject BrandonH;
     public GameObject BrandonB;
     public GameObject DOMINANT;
@@ -63,6 +64,7 @@ public class Control : MonoBehaviour
                     Player = DOMINANT;
                     break;
                 default:
+                    Player = Basic;
                     break;
             }
             // Instantiate FPS Player
@@ -88,5 +90,28 @@ public class Control : MonoBehaviour
 #else
          Application.Quit();
 #endif
+    }
+
+    public void characterSelect(int type)
+    {
+        Destroy(Player);
+        this.personType = type;
+        switch (type)
+        {
+            case 1:
+                Player = BrandonH;
+                break;
+            case 2:
+                Player = BrandonB;
+                break;
+            case 3:
+                Player = DOMINANT;
+                break;
+            default:
+                Player = Basic;
+                break;
+        }
+        Player = Instantiate(Player, this.gameObject.transform);
+        DontDestroyOnLoad(Player);
     }
 }

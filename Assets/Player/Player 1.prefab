@@ -2898,7 +2898,7 @@ MonoBehaviour:
   PrevLHandRot: {x: 0, y: 0, z: 0, w: 0}
   PrevRHandRot: {x: 0, y: 0, z: 0, w: 0}
   playerType: 1
-  personType: 0
+  personType: 1
   cam: {fileID: 7174502305037513786}
   lHand: {fileID: 0}
   rHand: {fileID: 0}
