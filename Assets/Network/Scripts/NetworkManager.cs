@@ -38,11 +38,16 @@ namespace SmashDomeNetwork
         Dictionary<int, GameObject> structures = new Dictionary<int, GameObject>();
         Queue<ShootMsg> bulletQ = new Queue<ShootMsg>();
 
+        Dictionary<int, Snapshot> netobjects = new Dictionary<int, Snapshot>();
+        Queue<NetObjectMsg> netInstantiate = new Queue<NetObjectMsg>();
+
+
         public GameObject playerPrefab;
         //public GameObject PCPlayer;
         public GameObject VRPlayer;
         public GameObject StructurePrefab;
         public GameObject bulletPrefab;
+        public GameObject netCubePrefab;
         public Material mat1, mat2, mat3;
         Control controller;
 
@@ -50,7 +55,6 @@ namespace SmashDomeNetwork
         public GameObject BrandonB;
         public GameObject DOMINANT;
         
-
         float sendDelay = 0.03f;
         float curTime = 0;
 
@@ -209,6 +213,28 @@ namespace SmashDomeNetwork
                 //rig.AddForce((transform.forward + transform.up / 4) * 2.0f);
                 //rig.AddForce(shoot.direction);
             }
+
+            while(netInstantiate.Count > 0)
+            {
+                NetObjectMsg objs = netInstantiate.Dequeue();
+                for (int i = 0; i < objs.objID.Count; i++)
+                {
+            
+                    //does not exist, add new
+                    //Snapshot snap = new Snapshot();
+                    Debug.Log("HERE AT THE STUPID SPOT");
+                    GameObject netCube = Instantiate(netCubePrefab);
+                    Snapshot snap = netCube.GetComponent<Snapshot>();
+                    snap.objID = objs.objID[i];
+                    snap.scale = objs.localScale[i];
+                    snap.pos = objs.positions[i];
+                    snap.rot = objs.rotation[i];
+                        
+                    //netobjects.Add(snap.objID, snap.GetObject());
+                    netobjects.Add(snap.objID, snap);
+
+                }
+            }
         }
 
         public void ReceiveMessages()
@@ -228,11 +254,11 @@ namespace SmashDomeNetwork
 
         public void TranslateMsg(byte[] bytes)
         {
-            
+
             /*Message msg;
             msg = JsonUtility.FromJson<Message>(json);*/
             int msgType = Message.BytesToInt(Message.GetSegment(4, 4, bytes));
-            ////Debug.Log(json);
+            //Debug.Log(json);
             //translate the messages type and call appropriate fucntion
             switch ((MsgType)msgType)
             {
@@ -264,16 +290,20 @@ namespace SmashDomeNetwork
                     Shoot(bytes);
                     break;
                 case MsgType.ADDPLAYER:
-                    //Debug.Log("AddPlayer");
+                    Debug.Log("AddPlayer");
                     AddPlayer(bytes);
-                    break;/*
+                    break;
                 case MsgType.SNAPSHOT:
                     ProcessSnapshot(bytes);
-                    //Debug.Log("SnapShot");
-                    break;*/
+                    Debug.Log("SnapShot");
+                    break;
+                case MsgType.NETOBJECT:
+                    Debug.Log("NETOBJECT");
+                    NetObject(bytes);
+                    break;
                 case MsgType.STRUCTURE:
                     AddStructure(bytes);
-                    //Debug.Log("Structure");
+                    Debug.Log("Structure");
                     break;
 
             }
@@ -289,11 +319,11 @@ namespace SmashDomeNetwork
 
         public void Move(byte[] move)
         {
-            
+
             MoveMsg msg = new MoveMsg(move);
             try
             {
-                ////Debug.Log(json);
+                //Debug.Log(json);
                 Player player = players[msg.from].playerControl;
                 player.position = msg.pos;
                 player.rotation = msg.playerRotation;
@@ -311,7 +341,7 @@ namespace SmashDomeNetwork
             MoveVRMsg msg = new MoveVRMsg(move);
             try
             {
-                ////Debug.Log(json);
+                //Debug.Log(json);
                 Player player = players[msg.from].playerControl;
                 player.position = msg.pos;
                 player.rotation = msg.playerRotation;
@@ -349,21 +379,22 @@ namespace SmashDomeNetwork
             bulletQ.Enqueue(msg);
 
         }
-        public void ProcessSnapshot(string json)
+        public void ProcessSnapshot(byte[] _snapshot)
         {
-            SnapshotMsg snapshot = JsonUtility.FromJson<SnapshotMsg>(json);
+            SnapshotMsg snapshot = new SnapshotMsg(_snapshot);
             //Debug.Log(snapshot.userId.Count);
-            for(int i = 0; i < snapshot.userId.Count; i++)
+            for (int i = 0; i < snapshot.objID.Count; i++)
             {
                 try
                 {
-                    if (snapshot.userId[i] == this.id) continue;
+                    Debug.Log(string.Format("Pos: {0}", snapshot.positions[i]));
+                    int id = snapshot.objID[i];
+                    Snapshot cube = netobjects[id];
 
-                    int playerID = snapshot.userId[i];
-                    Player player = players[playerID].obj.GetComponent<Player>();
-                    player.position = snapshot.positions[i];
-                    player.rotation = snapshot.rotation[i];
-                    player.cameraRotation = snapshot.camRotation[i];
+                    cube.pos = snapshot.positions[i];
+                    cube.rot = snapshot.rotation[i];
+                    //player.playerControl.linear_speed = snapshot.linear_speed[i];
+                    //player.playerControl.angular_speed = snapshot.angular_speed[i];
                 }
                 catch (Exception e)
                 {
@@ -405,6 +436,14 @@ namespace SmashDomeNetwork
             LogoutMsg logOut = new LogoutMsg(this.id);
             client.SendMsg(logOut.GetBytes());
             client.Close();
+        }
+
+        private void NetObject(byte[] msg)
+        {
+            NetObjectMsg objs = new NetObjectMsg(msg);
+            Debug.Log(string.Format("ObjID.Count: {0}", objs.objID.Count));
+            netInstantiate.Enqueue(objs);
+            
         }
 
     }
