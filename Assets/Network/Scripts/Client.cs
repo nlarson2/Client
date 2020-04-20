@@ -31,7 +31,7 @@ public class Client
         try
         {
             //cli.Connect("smashdome3d.hopto.org", 44444);
-            cli.Connect("47.6.148.20", 44444);
+            cli.Connect("localhost", 44444);
         }
         catch (Exception e)
         {

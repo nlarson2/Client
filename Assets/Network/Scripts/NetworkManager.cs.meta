@@ -3,7 +3,16 @@ guid: a8032b79a2ae1334a9668c8b2857b867
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - localPlayer: {instanceID: 0}
+  - playerPrefab: {instanceID: 0}
+  - PCPlayer: {instanceID: 0}
+  - VRPlayer: {instanceID: 0}
+  - StructurePrefab: {instanceID: 0}
+  - bulletPrefab: {instanceID: 0}
+  - mat1: {fileID: 2100000, guid: cae8accaa37a0af47a73927d7ecebd60, type: 2}
+  - mat2: {fileID: 2100000, guid: fa02b2664824b584fb01ce1161be2eae, type: 2}
+  - mat3: {fileID: 2100000, guid: 007a620da0a7ca644b0e950f62f52a25, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
