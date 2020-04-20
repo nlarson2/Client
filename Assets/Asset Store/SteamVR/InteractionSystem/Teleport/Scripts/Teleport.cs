@@ -15,8 +15,6 @@ namespace Valve.VR.InteractionSystem
     {
         public SteamVR_Action_Boolean teleportAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Teleport");
 
-		public bool showHints = false;
-
         public LayerMask traceLayerMask;
 		public LayerMask floorFixupTraceLayerMask;
 		public float floorFixupMaximumTraceDistance = 1.0f;
@@ -179,14 +177,14 @@ namespace Valve.VR.InteractionSystem
 
 			if ( player == null )
 			{
-				Debug.LogError("<b>[SteamVR Interaction]</b> Teleport: No Player instance found in map.");
+				Debug.LogError("<b>[SteamVR Interaction]</b> Teleport: No Player instance found in map.", this);
 				Destroy( this.gameObject );
 				return;
 			}
 
 			CheckForSpawnPoint();
-			if(showHints)
-				Invoke( "ShowTeleportHint", 5.0f );
+
+			Invoke( "ShowTeleportHint", 5.0f );
 		}
 
 
