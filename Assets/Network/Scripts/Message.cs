@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 namespace SmashDomeNetwork
 {
@@ -16,7 +17,8 @@ namespace SmashDomeNetwork
         SHOOT = 5,
         SNAPSHOT = 6,
         STRUCTURE = 7,
-        ADDPLAYER = 8
+        ADDPLAYER = 8,
+        NETOBJECT = 9
     }
 
     public class Message
@@ -412,6 +414,7 @@ namespace SmashDomeNetwork
         }
 
     }
+
     public class StructureChangeMsg : Message
     {
         public Vector3 pos;
@@ -529,6 +532,7 @@ namespace SmashDomeNetwork
     {
         public int numId;
         public List<int> objID = new List<int>();
+        public List<Vector3> localScale = new List<Vector3>();
         public List<Vector3> positions = new List<Vector3>();
         public List<Quaternion> rotation = new List<Quaternion>();
 
@@ -551,6 +555,7 @@ namespace SmashDomeNetwork
             for (int i = 0; i < numId; i++)
             {
                 objID.Add(BytesToInt(GetSegment(index, 4, bytes))); index += 4;
+                localScale.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
                 positions.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
                 rotation.Add(BytesToQuaternion(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
             }
@@ -563,6 +568,7 @@ namespace SmashDomeNetwork
             for (int i = 0; i < objID.Count; i++)
             {
                 msg = Join(msg, IntToBytes(objID[i]));
+                msg = Join(msg, Vec3ToBytes(localScale[i]));
                 msg = Join(msg, Vec3ToBytes(positions[i]));
                 msg = Join(msg, QuaternionToBytes(rotation[i]));
             }

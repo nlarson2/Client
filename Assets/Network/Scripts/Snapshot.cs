@@ -4,12 +4,16 @@ using UnityEngine;
 
 namespace SmashDomeNetwork
 {
-     public class Snapshot : MonoBehaviour
+    public class Snapshot : MonoBehaviour
     {
 
         NetworkManager net = NetworkManager.Instance;
 
         public float speed = 10.0f;
+
+        public Vector3 linear_speed; //directional speed, move to this for autonomy
+        public Quaternion angular_speed; //rotation speed
+
         public GameObject obj;
         public Vector3 scale;
         public Vector3 pos;
@@ -19,7 +23,8 @@ namespace SmashDomeNetwork
         // Start is called before the first frame update
         void Start()
         {
-            this.obj = gameObject.transform.gameObject; //later will need dimensions specs
+            this.obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //this.obj = gameObject.transform.gameObject; //later will need dimensions specs
             this.scale = gameObject.transform.localScale;
             this.pos = gameObject.transform.position;
             this.rot = gameObject.transform.rotation;
@@ -42,8 +47,8 @@ namespace SmashDomeNetwork
             if (rot != transform.rotation)
             {
                 transform.eulerAngles = rot.eulerAngles;
-                transform.rotation = Quaternion.Slerp(transform.rotation, rot, 0.1f);   
+                transform.rotation = Quaternion.Slerp(transform.rotation, rot, 0.1f);
             }
         }
-
+    }
 }

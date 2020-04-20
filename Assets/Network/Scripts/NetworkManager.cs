@@ -34,6 +34,7 @@ namespace SmashDomeNetwork
         Queue<int> destroyQ = new Queue<int>();
         Queue<StructureChangeMsg> addStructQ = new Queue<StructureChangeMsg>();
         Dictionary<int, GameObject> structures = new Dictionary<int, GameObject>();
+        Dictionary<int, Snapshot> netobjects = new Dictionary<int, Snapshot>();
         Queue<ShootMsg> bulletQ = new Queue<ShootMsg>();
 
         public GameObject playerPrefab;
@@ -230,11 +231,14 @@ namespace SmashDomeNetwork
                 case MsgType.ADDPLAYER:
                     Debug.Log("AddPlayer");
                     AddPlayer(bytes);
-                    break;/*
+                    break;
                 case MsgType.SNAPSHOT:
                     ProcessSnapshot(bytes);
                     Debug.Log("SnapShot");
-                    break;*/
+                    break;
+                case MsgType.NETOBJECT:
+                    NetObject(bytes);
+                    break;
                 case MsgType.STRUCTURE:
                     AddStructure(bytes);
                     Debug.Log("Structure");
@@ -370,6 +374,29 @@ namespace SmashDomeNetwork
             LogoutMsg logOut = new LogoutMsg(this.id);
             client.SendMsg(logOut.GetBytes());
             client.Close();
+        }
+
+        private void NetObject(byte[] msg)
+        {
+            NetObjectMsg objs = new NetObjectMsg(msg);
+            for (int i = 0; i < objs.objID.Count; i++)
+            {
+                if (netobjects[objs.objID[i]])
+                {
+                    //exists, update, should not reach here
+                }
+                else
+                {                    
+                    //does not exist, add new
+                    Snapshot snap = new Snapshot();
+
+                    snap.objID = objs.objID[i];
+                    snap.scale = objs.localScale[i];
+                    snap.pos = objs.positions[i];
+                    snap.rot = objs.rotation[i];
+                    netobjects.Add(snap.objID, snap);
+                }
+            }
         }
 
     }
