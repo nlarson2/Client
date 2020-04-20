@@ -54,12 +54,12 @@ public class Shoot : MonoBehaviour
         //IF E key pressed -> Throw Grenade
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log("G is pressed");
+            //Debug.Log("G is pressed");
             grenadeThrown = true;
         }
         if (Input.GetKeyUp(KeyCode.E))
         {
-            Debug.Log("G is releasd");
+            //Debug.Log("G is releasd");
             grenadeThrown = false;
         }
 

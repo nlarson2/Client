@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
 namespace SmashDomeNetwork
 {
@@ -26,6 +25,7 @@ namespace SmashDomeNetwork
 
         //protected DateTime time = DateTime.Now;
         public static int seq = 1;
+        
         public static int snapSeq = 1;
         //default to 0 to avoid errors
         public int msgNum = 0;
@@ -143,7 +143,7 @@ namespace SmashDomeNetwork
 
         public static Quaternion BytesToQuaternion(byte[] bytes)
         {
-            //Debug.Log(Quaternion.Euler(BytesToVec3(bytes)));
+            Debug.Log(Quaternion.Euler(BytesToVec3(bytes)));
             return Quaternion.Euler(BytesToVec3(bytes));
 
         }
@@ -175,6 +175,7 @@ namespace SmashDomeNetwork
     public class LoginMsg : Message
     {
         //constructor
+        public int personType = 0;
         public LoginMsg(int from, int playerType = 0)
         {
             this.msgNum = seq++;
@@ -187,15 +188,18 @@ namespace SmashDomeNetwork
         public LoginMsg(byte[] bytes)
         {
             //start at 8 for all because first 8 are seq num and msgtype
+            this.msgType = 1;
             int index = 8;
             this.to = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
             this.from = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
             this.playerType = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
+            this.personType = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
         }
         public byte[] GetBytes()
         {
             byte[] msg = Base();
             msg = Join(msg, IntToBytes(playerType));
+            msg = Join(msg, IntToBytes(personType));
             msg = FinishMsg(msg);
             return msg;
         }
@@ -341,7 +345,8 @@ namespace SmashDomeNetwork
 
             // UPDATE HERE
             // Took this from player message. I would think it'd need to be 16 because it's 4 floats, but the code in player rotation has 12 bytes. not sure why.
-            this.rotation = Quaternion.Euler(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//16 bytes (4 floats)
+            // It's 3 floats because of Euler angles.
+            this.rotation = Quaternion.Euler(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
 
         }
         public byte[] GetBytes()
@@ -411,8 +416,8 @@ namespace SmashDomeNetwork
             return msg;
         }
 
-    }
 
+    }
     public class StructureChangeMsg : Message
     {
         public Vector3 pos;
@@ -500,7 +505,8 @@ namespace SmashDomeNetwork
 
     public class AddPlayerMsg : Message
     {
-        public AddPlayerMsg(int from, int playerType)
+        public int personType;
+        public AddPlayerMsg(int from, int playerType, int personType)
         {
             this.msgNum = seq++;
             //reset if it gets too high
@@ -508,6 +514,7 @@ namespace SmashDomeNetwork
             this.msgType = 8;
             this.from = from;
             this.playerType = playerType;
+            this.personType = personType;
         }
         public AddPlayerMsg(byte[] bytes)
         {
@@ -516,12 +523,14 @@ namespace SmashDomeNetwork
             this.to = BytesToInt(GetSegment(index, 4, bytes)); index += 4;//4 bytes in int
             this.from = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
             this.playerType = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
+            this.personType = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
 
         }
         public byte[] GetBytes()
         {
             byte[] msg = Base();
             msg = Join(msg, IntToBytes(this.playerType));
+            msg = Join(msg, IntToBytes(this.personType));
             msg = FinishMsg(msg);
             return msg;
         }

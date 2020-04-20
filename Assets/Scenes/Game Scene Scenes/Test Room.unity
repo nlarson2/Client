@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.043387376, g: 0.044548247, b: 0.05929023, a: 1}
+  m_IndirectSpecularColor: {r: 0.043224655, g: 0.04437619, b: 0.05930094, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1656,15 +1656,39 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 95847998059205920, guid: fc89912481daf614d9ffef21aa6cfbac,
-        type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 114966803654839386, guid: fc89912481daf614d9ffef21aa6cfbac,
         type: 3}
       propertyPath: fireAction.actionPath
       value: /actions/default/in/GunFire
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Size.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Size.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Size.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Center.z
+      value: 0.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Center.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Center.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 95847998059205920, guid: fc89912481daf614d9ffef21aa6cfbac,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7064319927932342341, guid: fc89912481daf614d9ffef21aa6cfbac,
         type: 3}
@@ -1690,30 +1714,6 @@ PrefabInstance:
         type: 3}
       propertyPath: attachmentFlags
       value: 44
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Size.x
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Size.y
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Size.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Center.z
-      value: 0.32
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Center.y
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Center.x
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
@@ -3138,15 +3138,39 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 95847998059205920, guid: fc89912481daf614d9ffef21aa6cfbac,
-        type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 114966803654839386, guid: fc89912481daf614d9ffef21aa6cfbac,
         type: 3}
       propertyPath: fireAction.actionPath
       value: /actions/default/in/GunFire
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Size.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Size.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Size.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Center.z
+      value: 0.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Center.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
+      propertyPath: m_Center.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 95847998059205920, guid: fc89912481daf614d9ffef21aa6cfbac,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7064319927932342341, guid: fc89912481daf614d9ffef21aa6cfbac,
         type: 3}
@@ -3172,30 +3196,6 @@ PrefabInstance:
         type: 3}
       propertyPath: attachmentFlags
       value: 44
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Size.x
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Size.y
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Size.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Center.z
-      value: 0.32
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Center.y
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223326627, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}
-      propertyPath: m_Center.x
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc89912481daf614d9ffef21aa6cfbac, type: 3}

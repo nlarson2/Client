@@ -79,7 +79,7 @@ public class OvrAvatar : MonoBehaviour
     [SerializeField]
     internal ovrAvatarAssetLevelOfDetail LevelOfDetail = ovrAvatarAssetLevelOfDetail.Highest;
 #endif
-#if UNITY_ANDROID && UNITY_5_5_OR_NEWER && !UNITY_EDITOR
+#if UNITY_ANDROID && UNITY_5_5_OR_NEWER
     [Tooltip(
         "Enable to use combined meshes to reduce draw calls. Currently only available on mobile devices. " +
         "Will be forced to false on PC.")]
@@ -117,7 +117,6 @@ public class OvrAvatar : MonoBehaviour
     // Avatar asset
     private HashSet<UInt64> assetLoadingIds = new HashSet<UInt64>();
     private bool assetsFinishedLoading = false;
-    private int renderPartCount = 0;
 
     // Material manager
     private OvrAvatarMaterialManager materialManager;
@@ -703,7 +702,7 @@ public class OvrAvatar : MonoBehaviour
                 catch (Exception e)
                 {
                     assetsFinishedLoading = true;
-                    throw; // rethrow the original exception to preserve callstack
+                    throw e; // rethrow the original exception to preserve callstack
                 }
 #if AVATAR_INTERNAL
                 AssetsDoneLoading.Invoke();
@@ -1016,12 +1015,26 @@ public class OvrAvatar : MonoBehaviour
 
     bool IsValidMic()
     {
-        if (Microphone.devices.Length < 1)
+        string[] devices = Microphone.devices;
+
+        if (devices.Length < 1)
         {
             return false;
         }
 
-        string selectedDevice = Microphone.devices[0].ToString();
+        int selectedDeviceIndex = 0;
+#if UNITY_STANDALONE_WIN
+        for (int i = 1; i < devices.Length; i++)
+        {
+            if (devices[i].ToUpper().Contains("RIFT"))
+            {
+                selectedDeviceIndex = i;
+                break;
+            }
+        }
+#endif
+
+        string selectedDevice = devices[selectedDeviceIndex];
 
         int minFreq;
         int maxFreq;

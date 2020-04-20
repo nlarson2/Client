@@ -21,6 +21,7 @@ namespace SmashDomeNetwork
             public GameObject obj;
             public Player playerControl;
             public int playerType;
+            public int personType;
         };
 
         public int id = 0;
@@ -29,24 +30,31 @@ namespace SmashDomeNetwork
         Client client;
 
         public GameObject localPlayer;
+        private LocalPlayer localPlayerScript;
         Dictionary<int, PlayerData> players = new Dictionary<int, PlayerData>();
         Queue<int> addPlayerQ = new Queue<int>();
         Queue<int> destroyQ = new Queue<int>();
         Queue<StructureChangeMsg> addStructQ = new Queue<StructureChangeMsg>();
         Dictionary<int, GameObject> structures = new Dictionary<int, GameObject>();
-        //Dictionary<int, GameObject> netobjects = new Dictionary<int, GameObject>();
-        Dictionary<int, Snapshot> netobjects = new Dictionary<int, Snapshot>();
-        Queue<NetObjectMsg> netInstantiate = new Queue<NetObjectMsg>();
         Queue<ShootMsg> bulletQ = new Queue<ShootMsg>();
 
+        Dictionary<int, Snapshot> netobjects = new Dictionary<int, Snapshot>();
+        Queue<NetObjectMsg> netInstantiate = new Queue<NetObjectMsg>();
+
+
         public GameObject playerPrefab;
-        public GameObject PCPlayer;
+        //public GameObject PCPlayer;
         public GameObject VRPlayer;
         public GameObject StructurePrefab;
         public GameObject bulletPrefab;
         public GameObject netCubePrefab;
         public Material mat1, mat2, mat3;
+        Control controller;
 
+        public GameObject BrandonH;
+        public GameObject BrandonB;
+        public GameObject DOMINANT;
+        
         float sendDelay = 0.03f;
         float curTime = 0;
 
@@ -78,16 +86,18 @@ namespace SmashDomeNetwork
 
             }
 
-        }
+        }  
 
         private void Start()
         {
+            controller = GameObject.Find("Controller").GetComponent<Control>();
+            //localPlayerScript = localPlayer.GetComponent<LocalPlayer>();
             print("TEST");
             Instance = this;
             msgThread = new Thread(ReceiveMessages);
             msgThread.Start();
         }
-
+       
         private void Update()
         {
             while (addPlayerQ.Count > 0)
@@ -96,16 +106,40 @@ namespace SmashDomeNetwork
                 PlayerData player = players[playerID];
                 if (player.id != this.id)
                 {
-                    if (playerType == 2)
+                    if (player.playerType == 2)
+                    {
+                        Debug.Log(string.Format("PersonType: {0}", player.personType));
+                        Debug.Log("INSTANTIATING VRPLAYER");
                         player.obj = Instantiate(VRPlayer, GetComponentInChildren<Transform>());
+                    }
                     else
-                        player.obj = Instantiate(PCPlayer, GetComponentInChildren<Transform>());
+                    {
+                        GameObject playerObj = BrandonB;
+                        switch (player.personType)
+                        {
+                            case 1:
+                                Debug.Log("CHANGED TO BRANDON H");
+                                playerObj = BrandonH;
+                                break;
+                            case 2:
+                                playerObj = BrandonB;
+                                break;
+                            case 3:
+                                playerObj = DOMINANT;
+                                break;
+                            default:
+                                Debug.Log("DEFAULTING");
+                                break;
+                        }
+                 
+                        player.obj = Instantiate(playerObj, GetComponentInChildren<Transform>());
+                    }
 
                     player.playerControl = player.obj.GetComponent<Player>();
                     player.obj.name = "NetworkPlayer:" + player.id;
                     players.Remove(playerID);
                     players.Add(playerID, player);
-
+                    
                 }
                 else
                 {
@@ -117,7 +151,7 @@ namespace SmashDomeNetwork
             while (destroyQ.Count > 0)
             {
                 int destroyPlayer = destroyQ.Dequeue();
-                Debug.Log(destroyPlayer);
+                //Debug.Log(destroyPlayer);
                 Destroy(this.players[destroyPlayer].obj);
                 players.Remove(destroyPlayer);
             }
@@ -128,16 +162,15 @@ namespace SmashDomeNetwork
                 GameObject obj;
                 if (structures.ContainsKey(structMsg.from))
                 {
-                    Debug.Log("ALREADY EXISTS");
+                    //Debug.Log("ALREADY EXISTS");
                     obj = structures[structMsg.from];
                 }
-                else
-                {
+                else {
                     obj = Instantiate(StructurePrefab, structMsg.pos, Quaternion.identity);
                     structures.Add(structMsg.from, obj);
                     //Material material = obj.GetComponent<Material>();
-
-                    switch (structMsg.textureType)
+                    
+                    switch(structMsg.textureType)
                     {
                         case 0:
                             obj.GetComponent<MeshRenderer>().material = mat1;
@@ -166,11 +199,11 @@ namespace SmashDomeNetwork
                 mesh.RecalculateNormals();
                 MeshCollider collider = obj.GetComponent<MeshCollider>();
                 collider.sharedMesh = mesh;
-
-
+                
+                
             }
 
-            while (bulletQ.Count > 0)
+            while(bulletQ.Count > 0)
             {
                 ShootMsg shoot = bulletQ.Dequeue();
                 //GameObject bull = Instantiate(bulletPrefab, shoot.position, transform.rotation);
@@ -230,25 +263,27 @@ namespace SmashDomeNetwork
             switch ((MsgType)msgType)
             {
                 case MsgType.LOGIN:
-                    Debug.Log("login");
+                    //Debug.Log("login");
                     LoginMsg login = new LoginMsg(bytes);
                     id = login.from;
-                    login.playerType = this.playerType;
-                    Login(bytes);
+                    login.playerType = controller.playerType;
+                    login.personType = controller.personType;
+                    Debug.Log(string.Format("PERSON: {0}", id));
+                    Login(login.GetBytes());
                     break;
                 case MsgType.LOGOUT:
                     LogoutMsg logout = new LogoutMsg(bytes);
-                    Debug.Log("RemovePlayer");
+                    //Debug.Log("RemovePlayer");
                     RemovePlayer(logout);
                     break;
                 case MsgType.MOVE:
                     //MoveMsg move = new MoveMsg(bytes);
-                    Debug.Log("Move");
+                    //Debug.Log("Move");
                     Move(bytes);
                     break;
                 case MsgType.MOVEVR:
                     //MoveMsg move = new MoveMsg(bytes);
-                    Debug.Log("MoveVR");
+                    //Debug.Log("MoveVR");
                     MoveVR(bytes);
                     break;
                 case MsgType.SHOOT:
@@ -278,6 +313,7 @@ namespace SmashDomeNetwork
         {
             /*LoginMsg outgoing = new LoginMsg(id);
             outgoing.from = id;*/
+            Debug.Log("LOGIN SENT");
             client.SendMsg(msg);
         }
 
@@ -329,6 +365,8 @@ namespace SmashDomeNetwork
                 PlayerData player = new PlayerData();
                 player.id = msg.from;
                 player.playerType = msg.playerType;
+                player.personType = msg.personType;
+                Debug.Log(string.Format("Player:  {0}   Person:{1}", player.playerType, player.personType));
                 //player.type = msg.msgType;
                 addPlayerQ.Enqueue(player.id);
                 players.Add(player.id, player);
@@ -387,7 +425,7 @@ namespace SmashDomeNetwork
 
         public void SendMsg(byte[] msg)
         {
-
+            
             client.SendMsg(msg);
 
         }
