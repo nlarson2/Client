@@ -33845,9 +33845,11 @@ MonoBehaviour:
     type: 3}
   bulletPrefab: {fileID: 6940828250910360934, guid: 4c49c38fad551f843b63913640caa567,
     type: 3}
-  mat1: {fileID: 2100000, guid: fa02b2664824b584fb01ce1161be2eae, type: 2}
-  mat2: {fileID: 2100000, guid: cae8accaa37a0af47a73927d7ecebd60, type: 2}
-  mat3: {fileID: 2100000, guid: 007a620da0a7ca644b0e950f62f52a25, type: 2}
+  netCubePrefab: {fileID: 5912442634927860682, guid: 14e0e00221f679440a3cf3b8eeff4e59,
+    type: 3}
+  mat1: {fileID: 2100000, guid: 962edfda0823151419192eacb7c6c8d2, type: 2}
+  mat2: {fileID: 2100000, guid: bce7334b191a5c947b4aeec71f1f3db6, type: 2}
+  mat3: {fileID: 2100000, guid: c7c281e5a464f72429153cea519aa64f, type: 2}
 --- !u!4 &1401853916 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000011050751358, guid: ef77372ba45b400439d547071a884266,
