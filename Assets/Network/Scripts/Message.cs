@@ -17,7 +17,8 @@ namespace SmashDomeNetwork
         SNAPSHOT = 6,
         STRUCTURE = 7,
         ADDPLAYER = 8,
-        NETOBJECT = 9
+        NETOBJECT = 9,
+        RESPAWN = 10
     }
 
     public class Message
@@ -25,7 +26,7 @@ namespace SmashDomeNetwork
 
         //protected DateTime time = DateTime.Now;
         public static int seq = 1;
-        
+
         public static int snapSeq = 1;
         //default to 0 to avoid errors
         public int msgNum = 0;
@@ -68,7 +69,7 @@ namespace SmashDomeNetwork
         // used to append the size of the message to the front of the msg
         public byte[] FinishMsg(byte[] bytes)
         {
-            byte[] delim = { (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n' };
+            byte[] delim = { (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n', (byte)'\n' };
             return Join(bytes, delim);
         }
 
@@ -324,6 +325,7 @@ namespace SmashDomeNetwork
     {
         public Vector3 position;
         public Vector3 direction;
+        public int shootType = 0;
         public Quaternion rotation;
         public ShootMsg(int from)
         {
@@ -339,6 +341,7 @@ namespace SmashDomeNetwork
             int index = 8;
             this.to = BytesToInt(GetSegment(index, 4, bytes)); index += 4;//4 bytes in int
             this.from = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
+            this.shootType = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
             //this.playerType = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
             this.position = BytesToVec3(GetSegment(index, 12, bytes)); index += 12;//12 bytes (3 floats)
             this.direction = BytesToVec3(GetSegment(index, 12, bytes)); index += 12;//12 bytes (3 floats)
@@ -352,6 +355,7 @@ namespace SmashDomeNetwork
         public byte[] GetBytes()
         {
             byte[] msg = Base();
+            msg = Join(msg, IntToBytes(this.shootType));
             msg = Join(msg, Vec3ToBytes(this.position));
             msg = Join(msg, Vec3ToBytes(this.direction));
             msg = Join(msg, Vec3ToBytes(this.rotation.eulerAngles));
@@ -367,16 +371,16 @@ namespace SmashDomeNetwork
         public List<int> objID = new List<int>();
         public List<Vector3> positions = new List<Vector3>();
         public List<Quaternion> rotation = new List<Quaternion>();
-        public List<Quaternion> camRotation = new List<Quaternion>();
         public List<Vector3> linear_speed = new List<Vector3>();
         public List<Quaternion> angular_speed = new List<Quaternion>();
 
-        public SnapshotMsg()
+
+        public SnapshotMsg(int from)
         {
             this.msgNum = snapSeq++;
             if (snapSeq > 2000000000) { snapSeq = 1; }
             this.msgType = 6;
-            this.from = 0;
+            this.from = from; //object ID?
         }
 
         public SnapshotMsg(byte[] bytes)
@@ -385,17 +389,15 @@ namespace SmashDomeNetwork
             this.to = BytesToInt(GetSegment(index, 4, bytes)); index += 4;//4 bytes in int
             this.from = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
 
-            numId = BytesToInt(GetSegment(index, 4, bytes)); index += 4; //retrieves size of list
+            this.numId = BytesToInt(GetSegment(index, 4, bytes)); index += 4; //retrieves size of list
 
             for (int i = 0; i < numId; i++)
             {
                 objID.Add(BytesToInt(GetSegment(index, 4, bytes))); index += 4;
                 positions.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
-                rotation.Add(BytesToQuaternion(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)            
+                rotation.Add(BytesToQuaternion(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
                 linear_speed.Add(BytesToVec3(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
-                angular_speed.Add(Quaternion.Euler(BytesToVec3(GetSegment(index, 12, bytes)))); index += 12;//12 bytes (4 floats)
-
-
+                angular_speed.Add(BytesToQuaternion(GetSegment(index, 12, bytes))); index += 12;//12 bytes (3 floats)
             }
         }
 
@@ -410,13 +412,10 @@ namespace SmashDomeNetwork
                 msg = Join(msg, QuaternionToBytes(rotation[i]));
                 msg = Join(msg, Vec3ToBytes(linear_speed[i]));
                 msg = Join(msg, QuaternionToBytes(angular_speed[i]));
-
             }
             msg = FinishMsg(msg);
             return msg;
         }
-
-
     }
     public class StructureChangeMsg : Message
     {
@@ -584,4 +583,34 @@ namespace SmashDomeNetwork
         }
 
     }
+
+    public class RespawnMsg : Message
+    {
+        public Vector3 pos;
+
+        public RespawnMsg()
+        {
+            this.msgNum = seq++;
+            //reset if it gets too high
+            if (seq > 2000000000) { seq = 1; }
+            this.msgType = 10;
+        }
+        public RespawnMsg(byte[] bytes)
+        {
+            //start at 8 for all because first 8 are seq num and msgtype
+            int index = 8;
+            this.to = BytesToInt(GetSegment(index, 4, bytes)); index += 4;//4 bytes in int
+            this.from = BytesToInt(GetSegment(index, 4, bytes)); index += 4;
+            this.pos = BytesToVec3(GetSegment(index, 12, bytes)); index += 12;//12 bytes (3 floats)
+        }
+        public byte[] GetBytes()
+        {
+            byte[] msg = Base();
+            msg = Join(msg, Vec3ToBytes(this.pos));
+            msg = FinishMsg(msg);
+            Debug.Log("GOT RESPAWN BYTES");
+            return msg;
+        }
+    }
 }
+

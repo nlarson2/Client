@@ -37,6 +37,7 @@ namespace SmashDomeNetwork
         Queue<StructureChangeMsg> addStructQ = new Queue<StructureChangeMsg>();
         Dictionary<int, GameObject> structures = new Dictionary<int, GameObject>();
         Queue<ShootMsg> bulletQ = new Queue<ShootMsg>();
+        Queue<RespawnMsg> respawnQ = new Queue<RespawnMsg>();
 
         Dictionary<int, Snapshot> netobjects = new Dictionary<int, Snapshot>();
         Queue<NetObjectMsg> netInstantiate = new Queue<NetObjectMsg>();
@@ -235,6 +236,19 @@ namespace SmashDomeNetwork
 
                 }
             }
+            while(respawnQ.Count > 0)
+            {
+                RespawnMsg msg = respawnQ.Dequeue();
+                if (localPlayer != null){
+                    localPlayer.SetActive(false);
+
+                    localPlayer.transform.position = msg.pos;
+                    //localPlayer.GetComponent<LocalPlayer>().respawn = true;
+                    //localPlayer.GetComponent<LP>().respawnPos = ###;
+                    localPlayer.SetActive(true);
+                    Debug.Log("Moving player to Respawn Position..");
+                }
+            }
         }
 
         public void ReceiveMessages()
@@ -305,7 +319,10 @@ namespace SmashDomeNetwork
                     AddStructure(bytes);
                     Debug.Log("Structure");
                     break;
-
+                case MsgType.RESPAWN:
+                    Respawn(bytes);
+                    Debug.Log("RESPAWN");
+                    break;
             }
         }
 
@@ -413,6 +430,12 @@ namespace SmashDomeNetwork
         public void RemovePlayer(Message msg)
         {
             destroyQ.Enqueue(msg.from);
+        }
+
+        public void Respawn(byte[] respawnBytes)
+        {
+            RespawnMsg respawnMsg = new RespawnMsg(respawnBytes);
+            respawnQ.Enqueue(respawnMsg);
         }
 
 

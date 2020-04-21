@@ -29,9 +29,8 @@ public class LocalPlayer : MonoBehaviour
     public Camera cam;
     public GameObject lHand;
     public GameObject rHand;
-
-
-
+    public bool respawn = false;
+    //set a respawn point
     
     void Update()
     {
@@ -40,9 +39,10 @@ public class LocalPlayer : MonoBehaviour
         {
             networkManager = NetworkManager.Instance;
            // networkManager.localPlayer = this.gameObject;
-          
             return;
         }
+        if(networkManager != null && networkManager.localPlayer == null) 
+            networkManager.localPlayer = this.gameObject;
         //track time to only send messages at certain intervals
         time += Time.deltaTime;
 
@@ -51,7 +51,7 @@ public class LocalPlayer : MonoBehaviour
                 PrevPosition != transform.position ||
                 PrevRotate.y != transform.rotation.y ||
                 PrevRotate.x != transform.rotation.x)
-            )
+            && !respawn)
         {
             if (playerType == 1)
             {
@@ -77,6 +77,11 @@ public class LocalPlayer : MonoBehaviour
                 networkManager.SendMsg(movementMsg.GetBytes());
             }
             time = 0;
+        }
+        else if(respawn)
+        {
+            transform.position = new Vector3(12.0f, 3.0f, 12.0f);
+            respawn = false;
         }
 
         //update previous information
