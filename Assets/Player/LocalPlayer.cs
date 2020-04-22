@@ -47,11 +47,7 @@ public class LocalPlayer : MonoBehaviour
         time += Time.deltaTime;
 
         //only send message if a change has occured //idk if this actually works
-        if (time > 0.1 && (
-                PrevPosition != transform.position ||
-                PrevRotate.y != transform.rotation.y ||
-                PrevRotate.x != transform.rotation.x)
-            && !respawn)
+        if (time > 0.1 && Moved(PrevPosition, transform.position) && !respawn)
         {
             if (playerType == 1)
             {
@@ -88,6 +84,17 @@ public class LocalPlayer : MonoBehaviour
         PrevPosition = transform.position;
         PrevRotate.x = cam.transform.rotation.x;
         PrevRotate.y = transform.rotation.y;
+    }
+    private float eps = 0.00001f;
+    bool Moved(Vector3 p1, Vector3 p2)
+    {
+        if (Mathf.Abs(p1.x - p2.x) > eps)
+            return true;
+        if (Mathf.Abs(p1.y - p2.y) > eps)
+            return true;
+        if (Mathf.Abs(p1.z - p2.z) > eps)
+            return true;
+        return false;
     }
 
 }

@@ -28,4 +28,15 @@ public class ButtonHit : MonoBehaviour
             }
         }
     }
+    public void Collide()
+    {
+        if (scene == "Game")
+        {
+            control.NextScene();
+        }
+        if (scene == "Quit")
+        {
+            control.QuitGame();
+        }
+    }
 }

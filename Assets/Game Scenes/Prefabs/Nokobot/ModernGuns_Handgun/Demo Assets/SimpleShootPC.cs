@@ -45,12 +45,25 @@ public class SimpleShootPC : MonoBehaviour
         // bullet.GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
         print("shoot");
         GameObject tempFlash;
-       Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation).GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
-       tempFlash = Instantiate(muzzleFlashPrefab, barrelLocation.position, barrelLocation.rotation);
+        //Instantiate(bulletPrefab, barrelLocation.position, barrelLocation.rotation).GetComponent<Rigidbody>().AddForce(barrelLocation.forward * shotPower);
+        tempFlash = Instantiate(muzzleFlashPrefab, barrelLocation.position, barrelLocation.rotation);
+        RaycastHit hit;
+        Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 100.0f);
+        //Debug.DrawRay(shootMsg.position, fwd * 20, Color.green, 5, false);
+        //Debug.Log(string.Format("hit something? {0}", hit.transform.name));
+        GameObject hitObj = hit.collider.gameObject;
+        if(hitObj.tag == "hat")
+        {
+            hitObj.GetComponent<HatSelect>().Collide();
+        }
+        if (hitObj.tag == "button")
+        {
+            hitObj.GetComponent<ButtonHit>().Collide();
+        }
 
-       Destroy(tempFlash, 0.5f);
-            //Instantiate(casingPrefab, casingExitLocation.position, casingExitLocation.rotation).GetComponent<Rigidbody>().AddForce(casingExitLocation.right * 100f);
-       
+        Destroy(tempFlash, 0.5f);
+        //Instantiate(casingPrefab, casingExitLocation.position, casingExitLocation.rotation).GetComponent<Rigidbody>().AddForce(casingExitLocation.right * 100f);
+
     }
 
     void CasingRelease()

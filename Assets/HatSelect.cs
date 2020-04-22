@@ -35,4 +35,8 @@ public class HatSelect : MonoBehaviour
             }
         }
     }
+    public void Collide()
+    {
+        control.characterSelect(hatNo);
+    }
 }

@@ -7685,7 +7685,7 @@ GameObject:
   - component: {fileID: 897432580}
   m_Layer: 0
   m_Name: JJHat_Party
-  m_TagString: Untagged
+  m_TagString: hat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8099,7 +8099,7 @@ GameObject:
   - component: {fileID: 939475401}
   m_Layer: 0
   m_Name: JJHat_Top
-  m_TagString: Untagged
+  m_TagString: hat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12214,7 +12214,7 @@ GameObject:
   - component: {fileID: 1465080565}
   m_Layer: 0
   m_Name: JJHat
-  m_TagString: Untagged
+  m_TagString: hat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

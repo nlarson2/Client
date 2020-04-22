@@ -109,8 +109,8 @@ namespace SmashDomeNetwork
                 {
                     if (player.playerType == 2)
                     {
-                        Debug.Log(string.Format("PersonType: {0}", player.personType));
-                        Debug.Log("INSTANTIATING VRPLAYER");
+                        //Debug.Log(string.Format("PersonType: {0}", player.personType));
+                        //Debug.Log("INSTANTIATING VRPLAYER");
                         player.obj = Instantiate(VRPlayer, GetComponentInChildren<Transform>());
                     }
                     else
@@ -119,7 +119,7 @@ namespace SmashDomeNetwork
                         switch (player.personType)
                         {
                             case 1:
-                                Debug.Log("CHANGED TO BRANDON H");
+                                //Debug.Log("CHANGED TO BRANDON H");
                                 playerObj = BrandonH;
                                 break;
                             case 2:
@@ -129,7 +129,7 @@ namespace SmashDomeNetwork
                                 playerObj = DOMINANT;
                                 break;
                             default:
-                                Debug.Log("DEFAULTING");
+                                //Debug.Log("DEFAULTING");
                                 break;
                         }
                  
@@ -152,7 +152,7 @@ namespace SmashDomeNetwork
             while (destroyQ.Count > 0)
             {
                 int destroyPlayer = destroyQ.Dequeue();
-                //Debug.Log(destroyPlayer);
+                ////Debug.Log(destroyPlayer);
                 Destroy(this.players[destroyPlayer].obj);
                 players.Remove(destroyPlayer);
             }
@@ -163,14 +163,14 @@ namespace SmashDomeNetwork
                 GameObject obj;
                 if (structures.ContainsKey(structMsg.from))
                 {
-                    //Debug.Log("ALREADY EXISTS");
+                    ////Debug.Log("ALREADY EXISTS");
                     obj = structures[structMsg.from];
                 }
                 else {
                     obj = Instantiate(StructurePrefab, structMsg.pos, Quaternion.identity);
                     structures.Add(structMsg.from, obj);
                     //Material material = obj.GetComponent<Material>();
-                    Debug.Log(string.Format("TextureType: {0}", structMsg.textureType));
+                    //Debug.Log(string.Format("TextureType: {0}", structMsg.textureType));
                     switch(structMsg.textureType)
                     {
                         case 0:
@@ -218,23 +218,33 @@ namespace SmashDomeNetwork
             while(netInstantiate.Count > 0)
             {
                 NetObjectMsg objs = netInstantiate.Dequeue();
-                for (int i = 0; i < objs.objID.Count; i++)
+                //does not exist, add new
+                //Snapshot snap = new Snapshot();
+                Debug.Log("HERE AT THE STUPID SPOT");
+                GameObject netCube = Instantiate(netCubePrefab, objs.positions, objs.rotation);
+                switch (objs.textureType)
                 {
-            
-                    //does not exist, add new
-                    //Snapshot snap = new Snapshot();
-                    Debug.Log("HERE AT THE STUPID SPOT");
-                    GameObject netCube = Instantiate(netCubePrefab, objs.positions[i], objs.rotation[i]);
-                    Snapshot snap = netCube.GetComponent<Snapshot>();
-                    snap.objID = objs.objID[i];
-                    snap.scale = objs.localScale[i];
-                    snap.pos = objs.positions[i];
-                    snap.rot = objs.rotation[i];
-                        
-                    //netobjects.Add(snap.objID, snap.GetObject());
-                    netobjects.Add(snap.objID, snap);
-
+                    case 0:
+                        netCube.GetComponent<MeshRenderer>().material = mat1;
+                        break;
+                    case 1:
+                        netCube.GetComponent<MeshRenderer>().material = mat2;
+                        break;
+                    case 2:
+                        netCube.GetComponent<MeshRenderer>().material = mat3;
+                        break;
                 }
+                Snapshot snap = netCube.GetComponent<Snapshot>();
+                snap.objID = objs.objID;
+                snap.scale = objs.localScale;
+                snap.pos = objs.positions;
+                snap.rot = objs.rotation;
+
+                //netobjects.Add(snap.objID, snap.GetObject());
+                Debug.Log(snap.objID);
+                netobjects.Add(snap.objID, snap);
+
+                
             }
             while(respawnQ.Count > 0)
             {
@@ -246,7 +256,7 @@ namespace SmashDomeNetwork
                     //localPlayer.GetComponent<LocalPlayer>().respawn = true;
                     //localPlayer.GetComponent<LP>().respawnPos = ###;
                     localPlayer.SetActive(true);
-                    Debug.Log("Moving player to Respawn Position..");
+                    //Debug.Log("Moving player to Respawn Position..");
                 }
             }
         }
@@ -269,60 +279,69 @@ namespace SmashDomeNetwork
         public void TranslateMsg(byte[] bytes)
         {
 
-            /*Message msg;
-            msg = JsonUtility.FromJson<Message>(json);*/
-            int msgType = Message.BytesToInt(Message.GetSegment(4, 4, bytes));
-            //Debug.Log(json);
-            //translate the messages type and call appropriate fucntion
-            switch ((MsgType)msgType)
+            try
             {
-                case MsgType.LOGIN:
-                    //Debug.Log("login");
-                    LoginMsg login = new LoginMsg(bytes);
-                    id = login.from;
-                    login.playerType = controller.playerType;
-                    login.personType = controller.personType;
-                    Debug.Log(string.Format("PERSON: {0}", id));
-                    Login(login.GetBytes());
-                    break;
-                case MsgType.LOGOUT:
-                    LogoutMsg logout = new LogoutMsg(bytes);
-                    //Debug.Log("RemovePlayer");
-                    RemovePlayer(logout);
-                    break;
-                case MsgType.MOVE:
-                    //MoveMsg move = new MoveMsg(bytes);
-                    //Debug.Log("Move");
-                    Move(bytes);
-                    break;
-                case MsgType.MOVEVR:
-                    //MoveMsg move = new MoveMsg(bytes);
-                    //Debug.Log("MoveVR");
-                    MoveVR(bytes);
-                    break;
-                case MsgType.SHOOT:
-                    Shoot(bytes);
-                    break;
-                case MsgType.ADDPLAYER:
-                    Debug.Log("AddPlayer");
-                    AddPlayer(bytes);
-                    break;
-                case MsgType.SNAPSHOT:
-                    ProcessSnapshot(bytes);
-                    Debug.Log("SnapShot");
-                    break;
-                case MsgType.NETOBJECT:
-                    Debug.Log("NETOBJECT");
-                    NetObject(bytes);
-                    break;
-                case MsgType.STRUCTURE:
-                    AddStructure(bytes);
-                    Debug.Log("Structure");
-                    break;
-                case MsgType.RESPAWN:
-                    Respawn(bytes);
-                    Debug.Log("RESPAWN");
-                    break;
+
+
+                /*Message msg;
+                msg = JsonUtility.FromJson<Message>(json);*/
+                int msgType = Message.BytesToInt(Message.GetSegment(4, 4, bytes));
+                ////Debug.Log(json);
+                //translate the messages type and call appropriate fucntion
+                switch ((MsgType)msgType)
+                {
+                    case MsgType.LOGIN:
+                        ////Debug.Log("login");
+                        LoginMsg login = new LoginMsg(bytes);
+                        id = login.from;
+                        login.playerType = controller.playerType;
+                        login.personType = controller.personType;
+                        //Debug.Log(string.Format("PERSON: {0}", id));
+                        Login(login.GetBytes());
+                        break;
+                    case MsgType.LOGOUT:
+                        LogoutMsg logout = new LogoutMsg(bytes);
+                        ////Debug.Log("RemovePlayer");
+                        RemovePlayer(logout);
+                        break;
+                    case MsgType.MOVE:
+                        //MoveMsg move = new MoveMsg(bytes);
+                        ////Debug.Log("Move");
+                        Move(bytes);
+                        break;
+                    case MsgType.MOVEVR:
+                        //MoveMsg move = new MoveMsg(bytes);
+                        ////Debug.Log("MoveVR");
+                        MoveVR(bytes);
+                        break;
+                    case MsgType.SHOOT:
+                        Shoot(bytes);
+                        break;
+                    case MsgType.ADDPLAYER:
+                        //Debug.Log("AddPlayer");
+                        AddPlayer(bytes);
+                        break;
+                    case MsgType.SNAPSHOT:
+                        ProcessSnapshot(bytes);
+                        //Debug.Log("SnapShot");
+                        break;
+                    case MsgType.NETOBJECT:
+                        //Debug.Log("NETOBJECT");
+                        NetObject(bytes);
+                        break;
+                    case MsgType.STRUCTURE:
+                        AddStructure(bytes);
+                        //Debug.Log("Structure");
+                        break;
+                    case MsgType.RESPAWN:
+                        Respawn(bytes);
+                        //Debug.Log("RESPAWN");
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                //Debug.Log("something wrong with a message");
             }
         }
 
@@ -330,7 +349,7 @@ namespace SmashDomeNetwork
         {
             /*LoginMsg outgoing = new LoginMsg(id);
             outgoing.from = id;*/
-            Debug.Log("LOGIN SENT");
+            //Debug.Log("LOGIN SENT");
             client.SendMsg(msg);
         }
 
@@ -340,7 +359,7 @@ namespace SmashDomeNetwork
             MoveMsg msg = new MoveMsg(move);
             try
             {
-                //Debug.Log(json);
+                ////Debug.Log(json);
                 Player player = players[msg.from].playerControl;
                 player.position = msg.pos;
                 player.rotation = msg.playerRotation;
@@ -358,7 +377,7 @@ namespace SmashDomeNetwork
             MoveVRMsg msg = new MoveVRMsg(move);
             try
             {
-                //Debug.Log(json);
+                ////Debug.Log(json);
                 Player player = players[msg.from].playerControl;
                 player.position = msg.pos;
                 player.rotation = msg.playerRotation;
@@ -383,7 +402,7 @@ namespace SmashDomeNetwork
                 player.id = msg.from;
                 player.playerType = msg.playerType;
                 player.personType = msg.personType;
-                Debug.Log(string.Format("Player:  {0}   Person:{1}", player.playerType, player.personType));
+                //Debug.Log(string.Format("Player:  {0}   Person:{1}", player.playerType, player.personType));
                 //player.type = msg.msgType;
                 addPlayerQ.Enqueue(player.id);
                 players.Add(player.id, player);
@@ -399,12 +418,13 @@ namespace SmashDomeNetwork
         public void ProcessSnapshot(byte[] _snapshot)
         {
             SnapshotMsg snapshot = new SnapshotMsg(_snapshot);
-            //Debug.Log(snapshot.userId.Count);
+            //Debug.Log(string.Format("Snapshot: {0}", snapshot.objID.Count));
+            ////Debug.Log(snapshot.userId.Count);
             for (int i = 0; i < snapshot.objID.Count; i++)
             {
                 try
                 {
-                    Debug.Log(string.Format("Pos: {0}", snapshot.positions[i]));
+                    //Debug.Log(string.Format("Pos: {0}", snapshot.positions[i]));
                     int id = snapshot.objID[i];
                     Snapshot cube = netobjects[id];
 
@@ -464,7 +484,7 @@ namespace SmashDomeNetwork
         private void NetObject(byte[] msg)
         {
             NetObjectMsg objs = new NetObjectMsg(msg);
-            Debug.Log(string.Format("ObjID.Count: {0}", objs.objID.Count));
+            ////Debug.Log(string.Format("ObjID.Count: {0}", objs.objID.Count));
             netInstantiate.Enqueue(objs);
             
         }
