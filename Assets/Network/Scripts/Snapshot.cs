@@ -56,5 +56,9 @@ namespace SmashDomeNetwork
         {
             return this.gameObject;
         }
+        public void RemoveObj()
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
