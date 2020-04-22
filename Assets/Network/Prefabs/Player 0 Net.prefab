@@ -187,7 +187,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 014444156b67cf24aa6f40146d934cea, type: 2}
+  - {fileID: 2100000, guid: 37a9dbb405ee858458a78a3ffb3ead72, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -875,6 +875,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1306930059333685546}
     m_Modifications:
+    - target: {fileID: 3601587303718167302, guid: 635958f02c3ba804a8dbf5fd6a39c232,
+        type: 3}
+      propertyPath: m_Name
+      value: NetGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 3601587303718167302, guid: 635958f02c3ba804a8dbf5fd6a39c232,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3598516314068403324, guid: 635958f02c3ba804a8dbf5fd6a39c232,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -944,16 +954,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.66666675
-      objectReference: {fileID: 0}
-    - target: {fileID: 3601587303718167302, guid: 635958f02c3ba804a8dbf5fd6a39c232,
-        type: 3}
-      propertyPath: m_Name
-      value: NetGun
-      objectReference: {fileID: 0}
-    - target: {fileID: 3601587303718167302, guid: 635958f02c3ba804a8dbf5fd6a39c232,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3601607858717440650, guid: 635958f02c3ba804a8dbf5fd6a39c232,
         type: 3}
