@@ -123,7 +123,7 @@ public class Client
                     msg[i] = (byte)stream.ReadByte();
                     Debug.Log("READING");
                 }*/
-                while (delimCount < 8)
+                while (delimCount < 16)
                 {
                     byte inByte = (byte)stream.ReadByte();
                     byteList.Add(inByte);

@@ -38,6 +38,7 @@ public class Shoot : MonoBehaviour
 
                 ShootMsg shootmsg = new ShootMsg(netManager.id);
 
+                shootmsg.shootType = 0; // Defualt is 0 for bullets
                 shootmsg.position = Camera.main.transform.position + Camera.main.transform.forward / 2;
                 shootmsg.rotation = Camera.main.transform.rotation;
                 shootmsg.direction = Camera.main.transform.forward;
@@ -46,37 +47,24 @@ public class Shoot : MonoBehaviour
                 curtime = 0;
             }
         }
-        if (Input.GetMouseButtonUp(0))
-        {
-            mousedown = false;
-        }
+       
 
         //IF E key pressed -> Throw Grenade
         if (Input.GetKeyDown(KeyCode.E))
         {
-            //Debug.Log("G is pressed");
-            grenadeThrown = true;
+            if (nadeTime > fireRate)
+            {
+                ShootMsg shootmsg = new ShootMsg(netManager.id);
+
+                shootmsg.shootType = 1; // This value is for rockets
+                shootmsg.position = Camera.main.transform.position + Camera.main.transform.forward / 2;
+                shootmsg.rotation = Camera.main.transform.rotation;
+                shootmsg.direction = Camera.main.transform.forward;
+
+                netManager.SendMsg(shootmsg.GetBytes());
+                nadeTime = 0;       // Reset nade throw timer
+            }
         }
-        if (Input.GetKeyUp(KeyCode.E))
-        {
-            //Debug.Log("G is releasd");
-            grenadeThrown = false;
-        }
-
-        
-
-        if (grenadeThrown && nadeTime > fireRate)
-        {
-            ShootMsg shootmsg = new ShootMsg(netManager.id);
-
-            shootmsg.position = Camera.main.transform.position + Camera.main.transform.forward / 2;
-            shootmsg.rotation = Camera.main.transform.rotation;
-            shootmsg.direction = Camera.main.transform.forward;
-
-            netManager.SendMsg(shootmsg.GetBytes());
-            nadeTime = 0;       // Reset nade throw timer
-        }
-
 
     }
 }

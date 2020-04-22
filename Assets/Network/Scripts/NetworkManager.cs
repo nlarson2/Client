@@ -37,6 +37,7 @@ namespace SmashDomeNetwork
         Queue<StructureChangeMsg> addStructQ = new Queue<StructureChangeMsg>();
         Dictionary<int, GameObject> structures = new Dictionary<int, GameObject>();
         Queue<ShootMsg> bulletQ = new Queue<ShootMsg>();
+        Queue<RespawnMsg> respawnQ = new Queue<RespawnMsg>();
 
         Dictionary<int, Snapshot> netobjects = new Dictionary<int, Snapshot>();
         Queue<NetObjectMsg> netInstantiate = new Queue<NetObjectMsg>();
@@ -169,7 +170,7 @@ namespace SmashDomeNetwork
                     obj = Instantiate(StructurePrefab, structMsg.pos, Quaternion.identity);
                     structures.Add(structMsg.from, obj);
                     //Material material = obj.GetComponent<Material>();
-                    
+                    Debug.Log(string.Format("TextureType: {0}", structMsg.textureType));
                     switch(structMsg.textureType)
                     {
                         case 0:
@@ -223,7 +224,7 @@ namespace SmashDomeNetwork
                     //does not exist, add new
                     //Snapshot snap = new Snapshot();
                     Debug.Log("HERE AT THE STUPID SPOT");
-                    GameObject netCube = Instantiate(netCubePrefab);
+                    GameObject netCube = Instantiate(netCubePrefab, objs.positions[i], objs.rotation[i]);
                     Snapshot snap = netCube.GetComponent<Snapshot>();
                     snap.objID = objs.objID[i];
                     snap.scale = objs.localScale[i];
@@ -233,6 +234,19 @@ namespace SmashDomeNetwork
                     //netobjects.Add(snap.objID, snap.GetObject());
                     netobjects.Add(snap.objID, snap);
 
+                }
+            }
+            while(respawnQ.Count > 0)
+            {
+                RespawnMsg msg = respawnQ.Dequeue();
+                if (localPlayer != null){
+                    localPlayer.SetActive(false);
+
+                    localPlayer.transform.position = msg.pos;
+                    //localPlayer.GetComponent<LocalPlayer>().respawn = true;
+                    //localPlayer.GetComponent<LP>().respawnPos = ###;
+                    localPlayer.SetActive(true);
+                    Debug.Log("Moving player to Respawn Position..");
                 }
             }
         }
@@ -305,7 +319,10 @@ namespace SmashDomeNetwork
                     AddStructure(bytes);
                     Debug.Log("Structure");
                     break;
-
+                case MsgType.RESPAWN:
+                    Respawn(bytes);
+                    Debug.Log("RESPAWN");
+                    break;
             }
         }
 
@@ -413,6 +430,12 @@ namespace SmashDomeNetwork
         public void RemovePlayer(Message msg)
         {
             destroyQ.Enqueue(msg.from);
+        }
+
+        public void Respawn(byte[] respawnBytes)
+        {
+            RespawnMsg respawnMsg = new RespawnMsg(respawnBytes);
+            respawnQ.Enqueue(respawnMsg);
         }
 
 
