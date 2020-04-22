@@ -52,13 +52,14 @@ namespace SmashDomeNetwork
         public Material mat1, mat2, mat3;
         Control controller;
 
+        public GameObject Basic;
         public GameObject BrandonH;
         public GameObject BrandonB;
         public GameObject DOMINANT;
         
         float sendDelay = 0.03f;
         float curTime = 0;
-
+        bool resetScene = false;
 
         Thread msgThread;
 
@@ -101,6 +102,11 @@ namespace SmashDomeNetwork
        
         private void Update()
         {
+            if (resetScene)
+            {
+                ResetGame();
+                resetScene = false;
+            }
             while (addPlayerQ.Count > 0)
             {
                 int playerID = addPlayerQ.Dequeue();
@@ -115,7 +121,7 @@ namespace SmashDomeNetwork
                     }
                     else
                     {
-                        GameObject playerObj = BrandonB;
+                        GameObject playerObj = Basic;
                         switch (player.personType)
                         {
                             case 1:
@@ -241,7 +247,7 @@ namespace SmashDomeNetwork
                 snap.rot = objs.rotation;
 
                 //netobjects.Add(snap.objID, snap.GetObject());
-                Debug.Log(snap.objID);
+                //Debug.Log(snap.objID);
                 netobjects.Add(snap.objID, snap);
 
                 
@@ -250,13 +256,19 @@ namespace SmashDomeNetwork
             {
                 RespawnMsg msg = respawnQ.Dequeue();
                 if (localPlayer != null){
-                    localPlayer.SetActive(false);
+                    LocalPlayer lp = localPlayer.GetComponent<LocalPlayer>();
+                    lp.lastRespawn += Time.deltaTime;
+                    if (lp.lastRespawn > 20.0f)
+                    {
+                        localPlayer.SetActive(false);
 
-                    localPlayer.transform.position = msg.pos;
-                    //localPlayer.GetComponent<LocalPlayer>().respawn = true;
-                    //localPlayer.GetComponent<LP>().respawnPos = ###;
-                    localPlayer.SetActive(true);
-                    //Debug.Log("Moving player to Respawn Position..");
+                        localPlayer.transform.position = msg.pos;
+                        //localPlayer.GetComponent<LocalPlayer>().respawn = true;
+                        //localPlayer.GetComponent<LP>().respawnPos = ###;
+                        localPlayer.SetActive(true);
+                        //Debug.Log("Moving player to Respawn Position..");
+                        lp.lastRespawn = 0.0f;
+                    }
                 }
             }
         }
@@ -336,6 +348,9 @@ namespace SmashDomeNetwork
                     case MsgType.RESPAWN:
                         Respawn(bytes);
                         //Debug.Log("RESPAWN");
+                        break;
+                    case MsgType.RESET:
+                        resetScene = true;
                         break;
                 }
             }
@@ -488,6 +503,20 @@ namespace SmashDomeNetwork
             netInstantiate.Enqueue(objs);
             
         }
-
+        void ResetGame()
+        {
+            GameObject[] cubes;
+            cubes = GameObject.FindGameObjectsWithTag("Net Cube");
+            Debug.Log("Reset");
+            Debug.Log("HERE");
+            Debug.Log("ERROR");
+            Debug.Log($"cubes: {cubes.Length}");
+            netInstantiate = new Queue<NetObjectMsg>();
+            netobjects = new Dictionary<int, Snapshot>();
+            foreach (GameObject cube in cubes) 
+            {
+                GameObject.Destroy(cube);
+            }
+        }
     }
 }

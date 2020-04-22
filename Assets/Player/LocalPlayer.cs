@@ -30,6 +30,8 @@ public class LocalPlayer : MonoBehaviour
     public GameObject lHand;
     public GameObject rHand;
     public bool respawn = false;
+    public Vector3 respawnPoint;
+    public float lastRespawn = 0.0f;
     //set a respawn point
     
     void Update()
@@ -76,7 +78,7 @@ public class LocalPlayer : MonoBehaviour
         }
         else if(respawn)
         {
-            transform.position = new Vector3(12.0f, 3.0f, 12.0f);
+            //transform.position = new Vector3(12.0f, 3.0f, 12.0f);
             respawn = false;
         }
 
