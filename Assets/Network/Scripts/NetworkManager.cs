@@ -52,6 +52,7 @@ namespace SmashDomeNetwork
         public Material mat1, mat2, mat3;
         Control controller;
 
+        public GameObject Basic;
         public GameObject BrandonH;
         public GameObject BrandonB;
         public GameObject DOMINANT;
@@ -115,7 +116,7 @@ namespace SmashDomeNetwork
                     }
                     else
                     {
-                        GameObject playerObj = BrandonB;
+                        GameObject playerObj = Basic;
                         switch (player.personType)
                         {
                             case 1:

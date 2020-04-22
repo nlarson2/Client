@@ -69,7 +69,7 @@ public class Control : MonoBehaviour
             XRSettings.enabled = false;
             playerType = 1;
             activeVR = ActiveVRFamily.None;
-            Player = PC;
+            Player = Basic;
             switch (this.personType)
             {
                 case 1:
