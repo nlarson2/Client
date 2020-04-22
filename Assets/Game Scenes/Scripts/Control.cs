@@ -22,28 +22,46 @@ public class Control : MonoBehaviour
     public GameObject BrandonB;
     public GameObject DOMINANT;
 
+    /* Virtual Reality Players 
+    public GameObject Basic_VR;
+    public GameObject BrandonH_VR;
+    public GameObject BrandonB_VR;
+    public GameObject DOMINANT_VR;
+    */
+
     private void Awake()
     {
-        
         detectedHeadset = XRDevice.model;
 
 
         if(detectedHeadset.ToLower().Contains("vive"))
         {
-            //XRSettings.enable = true;
-            //Debug.Log("VIVE");
+            XRSettings.enabled = true;
+            Debug.Log("VIVE");
             activeVR = ActiveVRFamily.Vive;
             Player = Vive;
             playerType = 2;
-            // Instantiate Vive Player
-            // Instantiate(myPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            /*switch (this.personType)
+            {
+                case 1:
+                    Player = BrandonH_VR;
+                    break;
+                case 2:
+                    Player = BrandonB_VR;
+                    break;
+                case 3:
+                    Player = DOMINANT_VR;
+                    break;
+                default:
+                    Player = Basic_VR;
+                    break;
+            }*/
         }
         else if(detectedHeadset.ToLower().Contains("oculus"))
         {
             activeVR = ActiveVRFamily.Oculus;
             Player = Oculus;
             playerType = 2;
-            // Instantiate Oculus Player
         }
         else
         {
@@ -82,10 +100,7 @@ public class Control : MonoBehaviour
 
     public void QuitGame()
     {
-        //Debug.Log("Attempting Quit");
 #if UNITY_EDITOR
-        // Application.Quit() does not work in the editor so
-        // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
         UnityEditor.EditorApplication.isPlaying = false;
 #else
          Application.Quit();
