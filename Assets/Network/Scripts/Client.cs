@@ -9,6 +9,7 @@ using UnityEngine;
 using SmashDomeNetwork;
 
 
+
 public class Client
 {
 
@@ -24,21 +25,21 @@ public class Client
         msgQueue = new Queue<byte[]>();
     }
 
-    public void Connect()
+    public void Connect(string domain, int port)
     {
         int count = 0;
         cli = new TcpClient();
-        try
-        {
-            cli.Connect("smashdome3d.hopto.org", 44444);
+        //try
+        //{
+            cli.Connect(domain, port);
             //cli.Connect("localhost", 44444);
-        }
-        catch (Exception e)
-        {
-            Debug.Log("FAILED TO CONNECT");
+       // }
+       // catch (Exception e)
+       // {
+      /*      Debug.Log("FAILED TO CONNECT");
             Application.Quit(0);
             count++;
-        }
+        }*/
         Debug.Log("HERE");
         if (cli.Connected)
         {

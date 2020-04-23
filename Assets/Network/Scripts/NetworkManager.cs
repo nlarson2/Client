@@ -9,6 +9,7 @@ using System.Threading;
 using System;
 using UnityStandardAssets.Characters.FirstPerson;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 namespace SmashDomeNetwork
 {
@@ -60,9 +61,11 @@ namespace SmashDomeNetwork
         float sendDelay = 0.03f;
         float curTime = 0;
         bool resetScene = false;
+        static int port;
+        static string domain;
 
         Thread msgThread;
-
+        StoredServerData storedData;
 
         //Set up to make NetworkManger a singleton
         private NetworkManager() { }
@@ -82,7 +85,14 @@ namespace SmashDomeNetwork
                     {
                         instance = value;
                         instance.client = new Client();
-                        instance.client.Connect();
+                        try
+                        {
+                            instance.client.Connect(NetworkManager.domain, NetworkManager.port);
+                        }
+                        catch (Exception e)
+                        {
+                            SceneManager.LoadScene(0);
+                        }
                     }
                 }
 
@@ -92,6 +102,8 @@ namespace SmashDomeNetwork
 
         private void Start()
         {
+            storedData = GameObject.Find("PassingData").GetComponent<StoredServerData>();
+            NetworkManager.port = storedData.portNum; NetworkManager.domain = storedData.domainAddress;
             controller = GameObject.Find("Controller").GetComponent<Control>();
             //localPlayerScript = localPlayer.GetComponent<LocalPlayer>();
             print("TEST");
