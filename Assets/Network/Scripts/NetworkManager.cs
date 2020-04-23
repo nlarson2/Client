@@ -257,8 +257,7 @@ namespace SmashDomeNetwork
                 RespawnMsg msg = respawnQ.Dequeue();
                 if (localPlayer != null){
                     LocalPlayer lp = localPlayer.GetComponent<LocalPlayer>();
-                    lp.lastRespawn += Time.deltaTime;
-                    if (lp.lastRespawn > 20.0f)
+                    if (lp.lastRespawn > 3.0f)
                     {
                         localPlayer.SetActive(false);
 

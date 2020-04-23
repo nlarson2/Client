@@ -15,6 +15,9 @@ public class SimpleShootPC : MonoBehaviour
     public Transform barrelLocation;
     public Transform casingExitLocation;
 
+    float fireRate = 0.5f;
+    float nextFire = 0.5f;
+
     public float shotPower = 100f;
 
     private Interactable interactable;
@@ -30,10 +33,9 @@ public class SimpleShootPC : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if(Input.GetKeyDown(KeyCode.Mouse0) && Time.time > nextFire)
         {
-            //Shoot();
-            //CasingRelease();
+            nextFire = Time.time + fireRate;
             animator.Play("Shooting",0,0);
         }
     }

@@ -31,13 +31,15 @@ public class LocalPlayer : MonoBehaviour
     public GameObject rHand;
     public bool respawn = false;
     public Vector3 respawnPoint;
-    public float lastRespawn = 0.0f;
+    public float lastRespawn = 25.0f;
     //set a respawn point
     
     void Update()
     {
+        if(lastRespawn < 25.0f)
+            lastRespawn += Time.deltaTime;
         //only run the update if the network manager has been established
-        if(networkManager == null)
+        if (networkManager == null)
         {
             networkManager = NetworkManager.Instance;
            // networkManager.localPlayer = this.gameObject;
