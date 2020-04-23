@@ -112,7 +112,7 @@ Material:
     - _EmissiveIntensityUnit: 0
     - _EnableFogOnTransparent: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.451
+    - _Glossiness: 0
     - _GlossyReflections: 1
     - _HdrpVersion: 2
     - _IncludeIndirectLighting: 1
