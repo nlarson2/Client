@@ -2017,6 +2017,8 @@ MonoBehaviour:
   lHand: {fileID: 0}
   rHand: {fileID: 0}
   respawn: 0
+  respawnPoint: {x: 0, y: 0, z: 0}
+  lastRespawn: 25
 --- !u!114 &2445607471069957670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2034,8 +2036,8 @@ MonoBehaviour:
   gun: {fileID: 2445607471069988995}
   grenade: {fileID: 0}
   hasGravity: 1
-  fireRate: 0.2
-  throwRate: 0.5
+  fireRate: 0.5
+  throwRate: 15
 --- !u!1 &2834948394205713286
 GameObject:
   m_ObjectHideFlags: 0
@@ -2848,6 +2850,8 @@ MonoBehaviour:
     type: 3}
   barrelLocation: {fileID: 7609379333950882789}
   casingExitLocation: {fileID: 7604031649137251875}
+  fireRate: 0.5
+  nextFire: 0.5
   shotPower: 1250
 --- !u!114 &2317344419821291125
 MonoBehaviour:

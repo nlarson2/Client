@@ -37,11 +37,9 @@ public class LocalPlayer : MonoBehaviour
     void Update()
     {
         if(lastRespawn < 25.0f)
-        {
             lastRespawn += Time.deltaTime;
-        }
         //only run the update if the network manager has been established
-        if(networkManager == null)
+        if (networkManager == null)
         {
             networkManager = NetworkManager.Instance;
            // networkManager.localPlayer = this.gameObject;

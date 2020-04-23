@@ -12,8 +12,8 @@ public class Shoot : MonoBehaviour
     public Transform gun;
     public GameObject grenade;
     public bool hasGravity = true;
-    public float fireRate = 0.2f; // Was 0.5f, seemed too slow.
-    public float throwRate = 0.5f;
+    float fireRate = 0.5f; // Was 0.5f, seemed too slow.
+    float throwRate = 15.0f;
     float curtime = 0.0f;
     float nadeTime = 0.0f;
     bool mousedown = false;
@@ -52,7 +52,7 @@ public class Shoot : MonoBehaviour
         //IF E key pressed -> Throw Grenade
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (nadeTime > fireRate)
+            if (nadeTime > throwRate)
             {
                 ShootMsg shootmsg = new ShootMsg(netManager.id);
 
