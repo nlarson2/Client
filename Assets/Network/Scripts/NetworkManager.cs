@@ -91,6 +91,12 @@ namespace SmashDomeNetwork
                         }
                         catch (Exception e)
                         {
+                            Debug.Log("DESTORYING");
+                            Destroy(instance.storedData.gameObject);
+                            Cursor.lockState = CursorLockMode.None;
+                            Cursor.visible = true;
+                            Destroy(instance.controller.gameObject);
+                            Debug.Log("SHOULD BE DESTORYED");
                             SceneManager.LoadScene(0);
                         }
                     }
