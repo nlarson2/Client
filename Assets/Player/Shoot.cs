@@ -12,8 +12,8 @@ public class Shoot : MonoBehaviour
     public Transform gun;
     public GameObject grenade;
     public bool hasGravity = true;
-    float fireRate = 0.5f; // Was 0.5f, seemed too slow.
-    float throwRate = 15.0f;
+    float fireRate = 0.25f; // Was 0.5f, seemed too slow.
+    float throwRate = 5.0f;
     float curtime = 0.0f;
     float nadeTime = 0.0f;
     bool mousedown = false;

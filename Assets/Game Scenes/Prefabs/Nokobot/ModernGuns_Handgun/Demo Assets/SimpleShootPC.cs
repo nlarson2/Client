@@ -15,8 +15,8 @@ public class SimpleShootPC : MonoBehaviour
     public Transform barrelLocation;
     public Transform casingExitLocation;
 
-    float fireRate = 0.5f;
-    float nextFire = 0.5f;
+    float fireRate = 0.25f;
+    float nextFire = 0.25f;
 
     public float shotPower = 100f;
 
